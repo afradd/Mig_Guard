@@ -1,30 +1,37 @@
-# Job Offer Checker
+# Mig_Guard
 
-Mobile-first AI web application for **CoU AI Hackathon 2026** (*AI for Humanity*) that helps prospective migrant workers check job offers and recruiter chats before departure[cite: 1].
+> AI-powered job offer and recruiter chat analyzer that helps migrant workers identify recruitment fraud before leaving home.
 
-## Team & Roles
-- **Team Leader (Member A):** Afrad Ali Ahim — AI & Backend Lead[cite: 1, 3]
-- **Member B:** *(add name)* — Frontend, UX & Bangla Audio[cite: 1, 3]
-- **Member C:** *(add name)* — Data, Rules & Evaluation[cite: 1, 3]
+Upload a job offer letter, contract, or recruiter chat screenshot and receive an explainable risk assessment with highlighted evidence, missing clauses, questions to ask, and official support resources.
 
-## Problem & Solution Summary
-- **Problem:** *(Add sourced statistics from TBS News and Global Voices)*[cite: 1, 4]
-- **Solution:** Photograph an offer letter or chat screenshot to get an explainable Bangla verdict (text & audio) with highlighted evidence, missing clauses, questions to ask, and official helplines[cite: 1]. Best verdict is **"Fewer concerns found"** (never "safe"); processed in memory with no document storage[cite: 1, 6, 9].
+## Why?
 
-## Features & How the AI Works
-*(To be completed: 7-stage pipeline — Ingest, Read, Extract, Verify, Reason, Score, Deliver)*[cite: 1]
+Many migrant workers are exposed to recruitment scams, hidden fees, fake employers, and contract substitution before departure. Most existing interventions happen after harm occurs.
 
-## Tech Stack, Models, APIs & Datasets
-*(To be completed: Next.js, FastAPI, Vision-LLM + Tesseract fallback, vector index, TTS, data files)*[cite: 1, 10]
+Mig_Guard focuses on prevention.
 
-## AI Tools & Models Used
-*(Disclose every coding assistant, model, and API used, and for what purpose)*[cite: 1, 7, 10]
+## Features
 
-## Third-Party Code, Assets & Sources
-*(Credit libraries, datasets, and official sources with URLs and retrieval dates)*[cite: 1, 8, 10]
+- 📷 Analyze offer letters and recruiter chats
+- 🔍 Extract salary, employer, fees, visa type, and contract details
+- 🚩 Detect recruitment red flags using an explainable rules engine
+- ✅ Highlight evidence directly from the uploaded document
+- ❓ Generate questions workers should ask before paying
+- 🔊 Bangla text-to-speech summaries
+- 📚 Retrieval-augmented explanations from trusted migration resources
+- ☎️ Official helplines and next-step guidance
 
-## Setup, Live Link & Demo Video
-- **Live Backend:** *(add URL after deploy)*[cite: 1, 5, 10]
-- **Live Frontend:** *(add URL after deploy)*[cite: 1, 5, 10]
-- **Demo Video:** *(add link — max 3 minutes)*[cite: 1, 7, 10]
-- **Local Setup:** *(add backend & frontend setup steps)*[cite: 1, 9, 10]
+## How It Works
+
+```text
+Document/Image
+      ↓
+ OCR & Extraction
+      ↓
+ Verification Checks
+      ↓
+ Risk Scoring
+      ↓
+ Evidence-Based Explanation
+      ↓
+ Bangla Verdict & Audio Output
