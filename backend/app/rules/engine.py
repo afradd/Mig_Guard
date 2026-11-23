@@ -20,8 +20,7 @@ def _load_json(path: Path) -> Dict[str, Any]:
 
 
 def load_catalog() -> Dict[str, Any]:
-    with open(CATALOG_PATH, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+    return yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
 
 
 def load_patterns() -> Dict[str, Any]:

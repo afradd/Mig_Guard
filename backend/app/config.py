@@ -28,5 +28,13 @@ class Settings:
         "FALLBACK_LLM_MODEL",
         "gemini-2.5-flash-lite",
     )
+    llm_timeout_seconds: int = int(os.getenv("LLM_TIMEOUT_SECONDS", "45"))
+    llm_max_attempts: int = int(os.getenv("LLM_MAX_ATTEMPTS", "3"))
+    ocr_timeout_seconds: int = int(os.getenv("OCR_TIMEOUT_SECONDS", "20"))
+    explain_with_llm: bool = os.getenv("EXPLAIN_WITH_LLM", "false").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
 
 settings = Settings()
