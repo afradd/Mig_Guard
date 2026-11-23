@@ -1,0 +1,17 @@
+{
+  "currency": "BDT",
+  "caps_by_country": {
+    "saudi arabia": {
+      "max_fee_bdt": null,
+      "status": "VERIFY_OFFICIAL_BMET_CIRCULAR"
+    },
+    "malaysia": {
+      "max_fee_bdt": null,
+      "status": "VERIFY_OFFICIAL_BMET_CIRCULAR"
+    },
+    "uae": {
+      "max_fee_bdt": null,
+      "status": "VERIFY_OFFICIAL_BMET_CIRCULAR"
+    }
+  }
+}
