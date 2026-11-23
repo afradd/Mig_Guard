@@ -1,11 +1,15 @@
 # LLM client for Mig_Guard — wraps the Google Gemini SDK.
 # Sends images + text to Gemini and returns structured OfferExtraction JSON.
-# Falls back to a secondary model automatically if the primary call fails.
+# Timeouts, retries, and a secondary model are applied before giving up.
 
-import base64
+from __future__ import annotations
+
+import json
+import logging
+import time
 from functools import lru_cache
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 from google import genai
 from google.genai import types
@@ -13,12 +17,17 @@ from google.genai import types
 from app.api.schemas import OfferExtraction
 from app.config import settings
 
+logger = logging.getLogger(__name__)
+
 
 class LLMExtractionError(Exception):
     """Raised when no model can produce a valid extraction."""
 
+    def __init__(self, message: str, timed_out: bool = False) -> None:
+        super().__init__(message)
+        self.timed_out = timed_out
 
-# Prompt lives beside this file so it can be edited without touching code.
+
 PROMPT_PATH = (
     Path(__file__).resolve().parent
     / "prompts"
@@ -28,17 +37,45 @@ PROMPT_PATH = (
 
 @lru_cache(maxsize=4)
 def _get_client(api_key: str) -> genai.Client:
-    """Cache Gemini clients — one per API key — to avoid recreating them on every request."""
-    return genai.Client(api_key=api_key)
+    timeout_ms = settings.llm_timeout_seconds * 1000
+    return genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(timeout=timeout_ms),
+    )
 
 
 def _load_prompt() -> str:
-    """Read the extraction system prompt from disk; fail fast if the file is missing."""
     if not PROMPT_PATH.exists():
-        raise LLMExtractionError(
-            f"Extraction prompt not found at {PROMPT_PATH}"
-        )
+        raise LLMExtractionError(f"Extraction prompt not found at {PROMPT_PATH}")
     return PROMPT_PATH.read_text(encoding="utf-8")
+
+
+def _is_retryable(exc: Exception) -> bool:
+    tokens = (
+        "timeout",
+        "timed out",
+        "429",
+        "500",
+        "502",
+        "503",
+        "504",
+        "unavailable",
+        "temporarily",
+        "resource exhausted",
+        "deadline",
+        "connection",
+        "reset",
+    )
+    message = str(exc).lower()
+    if any(token in message for token in tokens):
+        return True
+    code = getattr(exc, "code", None) or getattr(exc, "status_code", None)
+    return code in {408, 429, 500, 502, 503, 504}
+
+
+def _is_timeout(exc: Exception) -> bool:
+    message = str(exc).lower()
+    return "timeout" in message or "timed out" in message or "deadline" in message
 
 
 def _build_contents(
@@ -46,36 +83,60 @@ def _build_contents(
     text: str,
     prompt: str,
 ) -> list:
-    """Assemble the content list that Gemini's generate_content expects.
-
-    The list starts with the system prompt as a text Part, then any
-    pasted text, then the uploaded images (each preceded by a label).
-    Using types.Part keeps the format compatible with the SDK's type checker.
-    """
-    parts: list[types.Part] = []
-
-    # System instruction as the first user-turn text Part.
-    parts.append(types.Part.from_text(text=prompt))
-
-    # Optional pasted text from the user.
+    parts: list[types.Part] = [types.Part.from_text(text=prompt)]
     if text.strip():
         parts.append(
             types.Part.from_text(
                 text=f"Additional text supplied by the user:\n{text.strip()}"
             )
         )
-
-    # Attach each uploaded image together with a human-readable label.
     for index, (image_bytes, mime_type) in enumerate(images, start=1):
-        parts.append(
-            types.Part.from_text(text=f"Uploaded document image {index}:")
-        )
-        # from_bytes is the correct SDK method for inline binary image data.
-        parts.append(
-            types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
-        )
-
+        parts.append(types.Part.from_text(text=f"Uploaded document image {index}:"))
+        parts.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
     return parts
+
+
+def _sleep_backoff(attempt: int) -> None:
+    time.sleep(min(8.0, 0.8 * (2 ** attempt)))
+
+
+def _generate(
+    api_key: str,
+    model: str,
+    contents: list,
+    config: types.GenerateContentConfig,
+) -> str:
+    attempts = max(1, settings.llm_max_attempts)
+    last_error: Exception | None = None
+    timed_out = False
+    for attempt in range(attempts):
+        try:
+            client = _get_client(api_key)
+            response = client.models.generate_content(
+                model=model,
+                contents=contents,
+                config=config,
+            )
+            output_text = response.text
+            if not output_text:
+                raise ValueError(f"Model '{model}' returned an empty response.")
+            return output_text
+        except Exception as exc:
+            last_error = exc
+            timed_out = timed_out or _is_timeout(exc)
+            if attempt < attempts - 1 and _is_retryable(exc):
+                logger.warning(
+                    "LLM call failed (attempt %s/%s, model=%s): %s",
+                    attempt + 1,
+                    attempts,
+                    model,
+                    exc,
+                )
+                _sleep_backoff(attempt)
+                continue
+            break
+    message = f"Model '{model}' failed: {last_error}"
+    raise LLMExtractionError(message, timed_out=timed_out) from last_error
 
 
 def _call_gemini(
@@ -85,92 +146,72 @@ def _call_gemini(
     text: str,
     prompt: str,
 ) -> OfferExtraction:
-    """Call one Gemini model and parse the structured JSON response.
-
-    Uses GenerateContentConfig with response_schema so the model is
-    constrained to return JSON that matches OfferExtraction exactly.
-    """
-    client = _get_client(api_key)
     contents = _build_contents(images, text, prompt)
-
-    # response_schema constrains Gemini to return JSON matching OfferExtraction.
-    # response_mime_type tells the API we expect application/json text.
     config = types.GenerateContentConfig(
         response_mime_type="application/json",
         response_schema=OfferExtraction,
+        http_options=types.HttpOptions(timeout=settings.llm_timeout_seconds * 1000),
     )
-
-    response = client.models.generate_content(
-        model=model,
-        contents=contents,
-        config=config,
-    )
-
-    # response.text is the raw JSON string from the model.
-    output_text = response.text
-    if not output_text:
-        raise ValueError(f"Model '{model}' returned an empty response.")
-
-    # Validate the JSON against our Pydantic schema before returning.
+    output_text = _generate(api_key, model, contents, config)
     return OfferExtraction.model_validate_json(output_text)
+
+
+def _model_chain() -> list[tuple[str, str]]:
+    if not settings.primary_llm_api_key:
+        raise LLMExtractionError(
+            "PRIMARY_LLM_API_KEY is not set. Add it to backend/.env."
+        )
+    chain = [(settings.primary_llm_api_key, settings.primary_llm_model)]
+    fallback_key = settings.fallback_llm_api_key or settings.primary_llm_api_key
+    fallback_model = settings.fallback_llm_model
+    if fallback_key and fallback_model and (
+        fallback_model != settings.primary_llm_model
+        or fallback_key != settings.primary_llm_api_key
+    ):
+        chain.append((fallback_key, fallback_model))
+    return chain
 
 
 def extract_structured_fields(
     images: Sequence[tuple[bytes, str]],
     text: str = "",
 ) -> OfferExtraction:
-    """Entry point: try the primary model, fall back to the secondary model on any error.
-
-    Raises LLMExtractionError if both models fail or no key is configured.
-    """
-    if not settings.primary_llm_api_key:
-        raise LLMExtractionError(
-            "PRIMARY_LLM_API_KEY is not set. Add it to backend/.env."
-        )
-
     prompt = _load_prompt()
-
-    # --- Primary model attempt ---
-    try:
-        return _call_gemini(
-            api_key=settings.primary_llm_api_key,
-            model=settings.primary_llm_model,
-            images=images,
-            text=text,
-            prompt=prompt,
-        )
-    except Exception as primary_error:
-        pass  # Try fallback below; primary_error captured for chaining.
-
-    # --- Fallback model attempt ---
-    # Use fallback key if set, otherwise reuse the primary key with a different model.
-    fallback_key = (
-        settings.fallback_llm_api_key
-        or settings.primary_llm_api_key
-    )
-    fallback_model = settings.fallback_llm_model
-
-    # Only attempt fallback if it is meaningfully different from the primary.
-    should_try_fallback = bool(fallback_key) and bool(fallback_model) and (
-        fallback_model != settings.primary_llm_model
-        or fallback_key != settings.primary_llm_api_key
-    )
-
-    if should_try_fallback:
+    errors: list[Exception] = []
+    timed_out = False
+    for api_key, model in _model_chain():
         try:
             return _call_gemini(
-                api_key=fallback_key,
-                model=fallback_model,
+                api_key=api_key,
+                model=model,
                 images=images,
                 text=text,
                 prompt=prompt,
             )
-        except Exception as fallback_error:
-            raise LLMExtractionError(
-                "Both primary and fallback extraction failed."
-            ) from fallback_error
-
-    # Re-raise the original primary error wrapped in LLMExtractionError.
+        except LLMExtractionError as exc:
+            timed_out = timed_out or exc.timed_out
+            errors.append(exc)
+            logger.warning("Extraction model %s failed: %s", model, exc)
     raise LLMExtractionError(
-        f"Primary extraction failed and no fallback is configured: {primary_error}"
-    ) from primary_error
+        "Document extraction failed after retries and fallback. "
+        + "; ".join(str(err) for err in errors),
+        timed_out=timed_out,
+    )
+
+
+def generate_json(system_prompt: str, user_prompt: str) -> dict[str, Any]:
+    """Free-form JSON call used for grounded explanations."""
+    contents = [
+        types.Part.from_text(text=system_prompt),
+        types.Part.from_text(text=user_prompt),
+    ]
+    config = types.GenerateContentConfig(
+        response_mime_type="application/json",
+        http_options=types.HttpOptions(timeout=settings.llm_timeout_seconds * 1000),
+    )
+    api_key, model = _model_chain()[0]
+    output_text = _generate(api_key, model, contents, config)
+    data = json.loads(output_text)
+    if not isinstance(data, dict):
+        raise LLMExtractionError("Explanation model did not return a JSON object.")
+    return data

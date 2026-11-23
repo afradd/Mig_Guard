@@ -80,15 +80,39 @@ class OfferExtraction(BaseModel):
         default_factory=ExtractedField
     )
 
+class KnowledgePassage(BaseModel):
+    id: str
+    title: str = ""
+    text: str = ""
+    source: str = ""
+    source_url: str = ""
+
+
+class Flag(BaseModel):
+    rule_id: str
+    severity: str
+    weight: int = 0
+    title_en: str
+    title_bn: str
+    explanation_en: str
+    explanation_bn: str
+    evidence_snippet: str = ""
+    question_en: str = ""
+    question_bn: str = ""
+    kb_ids: list[str] = Field(default_factory=list)
+    passages: list[KnowledgePassage] = Field(default_factory=list)
+
+
 class AnalyzeResponse(BaseModel):
     verdict: VerdictType = "caution"
     score: int = Field(default=50, ge=0, le=100)
     language: str = "bn"
     input_summary: str
     extracted: dict[str, ExtractedField] = Field(default_factory=dict)
-    flags: list[dict] = Field(default_factory=list)
+    flags: list[Flag] = Field(default_factory=list)
     missing_clauses: list[str] = Field(default_factory=list)
     questions_to_ask: list[dict[str, str]] = Field(default_factory=list)
     unverifiable: list[str] = Field(default_factory=list)
     helplines: list[dict[str, str]] = Field(default_factory=list)
     audio_script_bn: str = ""
+    read_method: str = ""

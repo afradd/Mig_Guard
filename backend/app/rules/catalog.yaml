@@ -1,0 +1,52 @@
+# Rule catalog used by verification, scoring and explanations.
+# Weights are risk points (higher = more concern). Verdicts never use the word "safe".
+
+verdicts:
+  danger_min_score: 70
+  caution_min_score: 35
+
+rules:
+  R07_license:
+    severity: high
+    weight: 30
+    title_en: "Recruiting licence could not be confirmed as active"
+    title_bn: "রিক্রুটিং লাইসেন্স সক্রিয় বলে নিশ্চিত করা যায়নি"
+    explanation_en: "A licensed Bangladeshi recruiting agency must have an RL number that is active on the public BMET list."
+    explanation_bn: "বাংলাদেশের রিক্রুটিং এজেন্সির একটি সক্রিয় আরএল নম্বর থাকতে হয়, যা বিএমইটির তালিকায় পাওয়া যায়।"
+    question_en: "Please show your RL number, office address and a copy of the BMET licence."
+    question_bn: "আপনার আরএল নম্বর, অফিসের ঠিকানা এবং বিএমইটি লাইসেন্সের কপি দেখাবেন কি?"
+    kb_ids: ["licensed-agent-required", "helpline-16135"]
+
+  R03_fee_cap:
+    severity: high
+    weight: 28
+    title_en: "Recruitment fee is above the published ceiling"
+    title_bn: "নিয়োগ ফি প্রকাশিত সর্বোচ্চ সীমার উপরে"
+    explanation_en: "Bangladesh can set a maximum migration cost by destination. A fee above that published ceiling is a red flag."
+    explanation_bn: "গন্তব্য দেশ অনুযায়ী বাংলাদেশ সর্বোচ্চ মাইগ্রেশন খরচ নির্ধারণ করতে পারে। সেই সীমার বেশি ফি একটি সতর্ক সংকেত।"
+    question_en: "Please show the posted BMET fee for this country and give a stamped receipt."
+    question_bn: "এই দেশের জন্য বিএমইটিতে টানানো ফি এবং স্ট্যাম্পযুক্ত রসিদ দেখাবেন কি?"
+    kb_ids: ["oe-act-s21-fee-cap", "receipt-and-bank"]
+
+  R05_salary:
+    severity: high
+    weight: 26
+    title_en: "Advertised salary is far above typical public ranges"
+    title_bn: "ঘোষিত বেতন সাধারণ প্রকাশিত সীমার চেয়ে অনেক বেশি"
+    explanation_en: "Pay that is many times the usual range for this job and country is often used to rush a worker into paying."
+    explanation_bn: "এই কাজ ও দেশের সাধারণ সীমার চেয়ে অনেক গুণ বেশি বেতন প্রায়ই তাড়াহুড়ো করে টাকা নেওয়ার ফাঁদ।"
+    question_en: "Please show a written wage, overtime rules, and the employer's demand letter."
+    question_bn: "লিখিত বেতন, ওভারটাইম নিয়ম এবং নিয়োগকর্তার ডিমান্ড লেটার দেখাবেন কি?"
+    kb_ids: ["unrealistic-pay", "scam-compound-lure"]
+
+  R06_missing_clauses:
+    severity: medium
+    weight: 6
+    max_weight: 24
+    title_en: "Important contract items are missing"
+    title_bn: "চুক্তির গুরুত্বপূর্ণ বিষয় অনুপস্থিত"
+    explanation_en: "A complete offer names the employer, job, pay, hours, duration, housing and how you can return. Missing items should be written down before you pay."
+    explanation_bn: "একটি পূর্ণাঙ্গ অফারে নিয়োগকর্তা, কাজ, বেতন, সময়, মেয়াদ, থাকার ব্যবস্থা এবং ফেরার নিয়ম থাকে। যা নেই, টাকা দেওয়ার আগে লিখে নিন।"
+    question_en: "Please give a written contract that includes every missing item on this list."
+    question_bn: "এই তালিকায় যা নেই, সেগুলোসহ একটি লিখিত চুক্তি দেবেন কি?"
+    kb_ids: ["contract-must-be-written"]
