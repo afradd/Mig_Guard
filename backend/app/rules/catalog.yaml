@@ -1,0 +1,110 @@
+R01_NO_WRITTEN_CONTRACT:
+  severity: high
+  weight: 25
+  title_en: "No formal written contract"
+  title_bn: "লিখিত চাকরির চুক্তিপত্র নেই"
+  explanation_en: "The offer is only a chat message or social post, not a formal employment contract."
+  explanation_bn: "এই প্রস্তাবটি শুধুমাত্র মেসেজ বা পোস্ট, কোনো বৈধ লিখিত চুক্তিপত্র নয়।"
+  question_en: "Can you provide the official written contract stamped by the employer before I pay anything?"
+  question_bn: "টাকা দেওয়ার আগে কোম্পানির সিলসহ মূল লিখিত চুক্তিপত্র কি দেখাতে পারবেন?"
+
+R02_NON_WORK_VISA:
+  severity: high
+  weight: 30
+  title_en: "Visit or tourist visa offered for work"
+  title_bn: "কাজের কথা বলে ভিজিট বা ট্যুরিস্ট ভিসা দেওয়া হচ্ছে"
+  explanation_en: "Working on a tourist, visit, or business visa is illegal and puts you at risk of arrest or trafficking."
+  explanation_bn: "ট্যুরিস্ট বা ভিজিট ভিসায় বিদেশে কাজ করা অবৈধ এবং এতে প্রতারণা ও গ্রেপ্তারের ঝুঁকি থাকে।"
+  question_en: "Why does the document say visit/tourist visa instead of an official employment visa?"
+  question_bn: "কাজের ভিসার বদলে এখানে ভিজিট বা ট্যুরিস্ট ভিসার কথা লেখা কেন?"
+
+R03_CASH_OR_UNSPECIFIED_FEE:
+  severity: high
+  weight: 20
+  title_en: "Cash-only fee or no official receipt"
+  title_bn: "নগদ টাকা দাবি বা রসিদ ছাড়া লেনদেন"
+  explanation_en: "Demanding cash without a bank trail or official receipt violates safe migration rules."
+  explanation_bn: "ব্যাংক বা বৈধ রসিদ ছাড়া নগদ টাকা চাইলে প্রতারণার ঝুঁকি অনেক বেশি।"
+  question_en: "Will you accept payment through the recruiting agency's official bank account with a money receipt?"
+  question_bn: "এজেন্সির অফিশিয়াল ব্যাংক অ্যাকাউন্টে টাকা দিলে কি পাকা রসিদ দেবেন?"
+
+R04_HIGH_RISK_SCAM_PATTERN:
+  severity: high
+  weight: 35
+  title_en: "High-risk scam compound pattern"
+  title_bn: "সাইবার স্ক্যাম বা প্রতারণা চক্রের উচ্চ ঝুঁকি"
+  explanation_en: "Online, crypto, or data-entry jobs in high-risk border destinations are strongly linked to forced scam compounds."
+  explanation_bn: "এই দেশে অনলাইন, ক্রিপ্টো বা ডেটা এন্ট্রি কাজের প্রলোভন দেখিয়ে অনেক কর্মীকে জিম্মি করার ঘটনা ঘটেছে।"
+  question_en: "What is the exact physical address and registered business license of this office?"
+  question_bn: "এই অফিসের সঠিক ঠিকানা এবং সরকারি নিবন্ধন নম্বর কী?"
+
+R05_UNREALISTIC_SALARY:
+  severity: medium
+  weight: 15
+  title_en: "Unrealistically high salary promised"
+  title_bn: "অস্বাভাবিক বেশি বেতনের প্রলোভন"
+  explanation_en: "A salary far above the market rate for the role and country, with no qualifications required, is a common bait tactic used by scam recruiters."
+  explanation_bn: "কোনো যোগ্যতা ছাড়াই অস্বাভাবিক বেশি বেতনের প্রতিশ্রুতি প্রতারকদের একটি সাধারণ ফাঁদ।"
+  question_en: "Can you provide a written breakdown of how this salary is calculated and evidence of similar roles paying this amount?"
+  question_bn: "এই বেতন কীভাবে নির্ধারিত হয়েছে তার লিখিত বিবরণ এবং একই কাজে এই বেতন পাওয়ার প্রমাণ কি দিতে পারবেন?"
+
+R06_MISSING_CRITICAL_CLAUSES:
+  severity: medium
+  weight: 15
+  title_en: "Critical contract clauses are missing"
+  title_bn: "চুক্তিপত্রে গুরুত্বপূর্ণ শর্তাবলি উল্লেখ নেই"
+  explanation_en: "Essential terms like employer name, salary, working hours, accommodation, or return ticket are missing."
+  explanation_bn: "বেতন, কাজের সময়, থাকা-খাওয়া বা দেশে ফেরার টিকিটের মতো জরুরি তথ্য এখানে লেখা নেই।"
+  question_en: "Can you add working hours, overtime pay, accommodation, and return ticket terms in writing?"
+  question_bn: "কাজের সময়, ওভারটাইম, থাকা-খাওয়া এবং ফেরার টিকিটের কথা লিখিতভাবে যুক্ত করবেন কি?"
+
+R07_MISSING_AGENCY_LICENSE:
+  severity: high
+  weight: 20
+  title_en: "No government Recruiting License (RL) number"
+  title_bn: "সরকারি লাইসেন্স (RL) নম্বর উল্লেখ নেই"
+  explanation_en: "No valid BMET Recruiting License number is shown to verify the agent."
+  explanation_bn: "এজেন্ট বা প্রতিষ্ঠানের সরকারি রিক্রুটিং লাইসেন্স (RL) নম্বর এখানে দেওয়া নেই।"
+  question_en: "What is your BMET Recruiting License (RL) number so I can verify it?"
+  question_bn: "আপনাদের সরকারি রিক্রুটিং লাইসেন্স (RL) নম্বর কত, যাতে আমি যাচাই করতে পারি?"
+
+R08_SIGN_ON_ARRIVAL:
+  severity: high
+  weight: 25
+  title_en: "Contract to be signed only on arrival"
+  title_bn: "বিদেশে পৌঁছানোর পর চুক্তিপত্রে স্বাক্ষরের শর্ত"
+  explanation_en: "Signing a contract after arrival exposes you to contract substitution with lower pay."
+  explanation_bn: "বিদেশে যাওয়ার পর চুক্তি সই করতে বললে সেখানে গিয়ে কম বেতন বা ভিন্ন কাজে বাধ্য করার ঝুঁকি থাকে।"
+  question_en: "Why can I not read and sign the final contract here in Bangladesh before departure?"
+  question_bn: "বিদেশে যাওয়ার আগেই বাংলাদেশে বসে কেন মূল চুক্তিপত্রে সই করা যাবে না?"
+
+R09_PASSPORT_RETENTION:
+  severity: high
+  weight: 25
+  title_en: "Passport retention clause detected"
+  title_bn: "পাসপোর্ট জমা রাখার শর্ত রয়েছে"
+  explanation_en: "Employers or agents holding your passport restricts your freedom and is a major trafficking indicator."
+  explanation_bn: "নিয়োগকর্তা বা এজেন্টের কাছে পাসপোর্ট জমা রাখা আইনবিরোধী এবং এটি শোষণের বড় লক্ষণ।"
+  question_en: "Will I be allowed to keep my own passport with me at all times?"
+  question_bn: "আমি কি সবসময় আমার পাসপোর্ট নিজের কাছে রাখতে পারব?"
+
+R11_PRESSURE_TACTICS:
+  severity: medium
+  weight: 15
+  title_en: "Urgency or pressure tactics used"
+  title_bn: "তাড়াহুড়ো বা চাপ প্রয়োগ করা হচ্ছে"
+  explanation_en: "Phrases like 'pay today' or 'limited seats' are used to stop you from verifying the offer."
+  explanation_bn: "'আজই টাকা দিন' বা 'সিট শেষ হয়ে যাচ্ছে'—এমন চাপ দিয়ে আপনাকে যাচাই করার সুযোগ দেওয়া হচ্ছে না।"
+  question_en: "Can you give me 3 days to verify this offer with BMET before I decide?"
+  question_bn: "সিদ্ধান্ত নেওয়ার আগে সরকারি অফিসে কাগজপত্র যাচাই করার জন্য আমাকে কি ৩ দিন সময় দেবেন?"
+
+R12_PERSONAL_MOBILE_PAYMENT:
+  severity: high
+  weight: 25
+  title_en: "Payment to personal mobile money or before visa"
+  title_bn: "ব্যক্তিগত নম্বরে বা ভিসার আগেই টাকা দাবি"
+  explanation_en: "Sending money to a personal bKash/Nagad number or paying before seeing a verified visa is unsafe."
+  explanation_bn: "ব্যক্তিগত বিকাশ/নগদ নম্বরে বা ভিসা যাচাইয়ের আগেই টাকা পাঠানো অত্যন্ত ঝুঁকিপূর্ণ।"
+  question_en: "Why is payment requested to a personal number instead of a registered company account?"
+  question_bn: "কোম্পানির ব্যাংক অ্যাকাউন্টের বদলে ব্যক্তিগত নম্বরে টাকা চাওয়া হচ্ছে কেন?"
+

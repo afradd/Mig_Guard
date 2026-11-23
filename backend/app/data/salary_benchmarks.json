@@ -1,0 +1,21 @@
+{
+  "_note": "Salary benchmark ranges by destination country and job category. Figures must be verified from official government and ILO sources before use.",
+  "source": "ILO Labour Migration — https://www.ilo.org/topics-and-sectors/labour-migration (2026-11-24). To be supplemented with BMET and destination-country government sources.",
+  "benchmarks": {
+    "saudi_arabia": {
+      "domestic_worker_usd_per_month": {"min": 200, "max": 400, "status": "VERIFY_OFFICIAL"},
+      "construction_worker_usd_per_month": {"min": 300, "max": 600, "status": "VERIFY_OFFICIAL"}
+    },
+    "malaysia": {
+      "manufacturing_worker_myr_per_month": {"min": 1200, "max": 2000, "status": "VERIFY_OFFICIAL"},
+      "plantation_worker_myr_per_month": {"min": 1000, "max": 1800, "status": "VERIFY_OFFICIAL"}
+    },
+    "uae": {
+      "construction_worker_aed_per_month": {"min": 1000, "max": 2500, "status": "VERIFY_OFFICIAL"},
+      "domestic_worker_aed_per_month": {"min": 800, "max": 1500, "status": "VERIFY_OFFICIAL"}
+    },
+    "singapore": {
+      "domestic_worker_sgd_per_month": {"min": 570, "max": 800, "status": "VERIFY_OFFICIAL"}
+    }
+  }
+}
