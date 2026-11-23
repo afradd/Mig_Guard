@@ -28,3 +28,12 @@ Every figure used by verification checks is listed here. Re-check live official 
 ## Helplines
 
 - BMET website https://bmet.gov.bd/ retrieved 24 Nov 2026: Probashbandhu 16135; from abroad +88 09610 102 030; BMET 02-49357972; 333; 999.
+- Bangladesh Police - Hot Line Numbers: https://police.gov.bd (999, 109, 333).
+- Ministry of Expatriates' Welfare and Overseas Employment: +880-2-41030444 (https://probashi.gov.bd).
+
+## Knowledge Base & International Standards
+
+- ILO Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration
+- ILO International Labour Standards and Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration/international-labour-standards-and-labour-migration
+- ILO Fair Recruitment: https://www.ilo.org/topics-and-sectors/fair-recruitment
+- ILO Forced Labour, Modern Slavery and Trafficking in Persons: https://www.ilo.org/topics-and-sectors/forced-labour-modern-slavery-and-trafficking-persons

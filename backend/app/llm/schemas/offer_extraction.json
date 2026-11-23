@@ -1,80 +1,53 @@
 {
-  "$defs": {
-    "ExtractedField": {
-      "properties": {
-        "value": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Extracted value from the document. Null if absent.",
-          "title": "Value"
-        },
-        "confidence": {
-          "default": 0.0,
-          "description": "Model-estimated extraction confidence.",
-          "maximum": 1.0,
-          "minimum": 0.0,
-          "title": "Confidence",
-          "type": "number"
-        },
-        "source_snippet": {
-          "default": "",
-          "description": "Exact text from the original document supporting this value.",
-          "title": "Source Snippet",
-          "type": "string"
-        }
-      },
-      "title": "ExtractedField",
-      "type": "object"
-    }
-  },
-  "properties": {
-    "destination": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "employer": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "job_title": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "salary": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "fee_asked": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "visa_type": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "duration": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "hours": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "accommodation": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "agent": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "license_number": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "payment_method": {
-      "$ref": "#/$defs/ExtractedField"
-    },
-    "contact_channel": {
-      "$ref": "#/$defs/ExtractedField"
-    }
-  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "OfferExtraction",
-  "type": "object"
+  "type": "object",
+  "properties": {
+    "document_type": {
+      "type": "string",
+      "enum": ["formal_contract", "offer_letter", "chat_screenshot", "social_post", "unknown"]
+    },
+    "destination": { "$ref": "#/$defs/extractedField" },
+    "employer": { "$ref": "#/$defs/extractedField" },
+    "employer_address": { "$ref": "#/$defs/extractedField" },
+    "job_title": { "$ref": "#/$defs/extractedField" },
+    "salary_amount": { "$ref": "#/$defs/extractedNumberField" },
+    "salary_currency": { "$ref": "#/$defs/extractedField" },
+    "fee_asked": { "$ref": "#/$defs/extractedNumberField" },
+    "fee_currency": { "$ref": "#/$defs/extractedField" },
+    "visa_type": { "$ref": "#/$defs/extractedField" },
+    "duration": { "$ref": "#/$defs/extractedField" },
+    "working_hours": { "$ref": "#/$defs/extractedField" },
+    "accommodation": { "$ref": "#/$defs/extractedField" },
+    "return_ticket": { "$ref": "#/$defs/extractedField" },
+    "agent_name": { "$ref": "#/$defs/extractedField" },
+    "license_number": { "$ref": "#/$defs/extractedField" },
+    "payment_method": { "$ref": "#/$defs/extractedField" },
+    "contact_channel": { "$ref": "#/$defs/extractedField" },
+    "raw_red_flag_clauses": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Verbatim sentences mentioning passport holding, signing on arrival, pay today urgency, or salary deductions."
+    }
+  },
+  "$defs": {
+    "extractedField": {
+      "type": "object",
+      "properties": {
+        "value": { "type": ["string", "null"] },
+        "confidence": { "type": "number" },
+        "source_snippet": { "type": ["string", "null"] }
+      },
+      "required": ["value", "confidence", "source_snippet"]
+    },
+    "extractedNumberField": {
+      "type": "object",
+      "properties": {
+        "value": { "type": ["number", "null"] },
+        "confidence": { "type": "number" },
+        "source_snippet": { "type": ["string", "null"] }
+      },
+      "required": ["value", "confidence", "source_snippet"]
+    }
+  }
 }
