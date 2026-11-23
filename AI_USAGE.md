@@ -7,3 +7,4 @@ According to Rule 4 and Rule 9 of CoU AI Hackathon 2026, all AI coding assistant
 | 2026-11-21 | Member A | Antigravity AI Assistant | Backend FastAPI app scaffolding, health check and analyze endpoints |
 | 2026-11-21 | Member B | Antigravity AI Assistant | Next.js frontend scaffolding, landing page design, Bangla i18n copy |
 | 2026-11-24 | Member B | Antigravity AI Assistant | Frontend bug fixing, LayoutProps resolution, architecture audit, build validation |
+| 2026-11-24 | Member B | Copilot SDK in VS Code | Frontend result handling, GitHub CI setup, and validation |

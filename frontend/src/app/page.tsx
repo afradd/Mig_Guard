@@ -2,21 +2,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { analyzeOffer } from "@/lib/api";
+import { speakBangla, stopSpeaking } from "@/lib/tts";
+import type { AnalysisResponse } from "@/lib/types";
 
 type Language = "en" | "bn";
-
-type AnalysisResult = {
-  verdict: "danger" | "caution" | "fewer_concerns";
-  score: number;
-  language: string;
-  input_summary: string;
-  extracted?: Record<string, { value?: string; confidence: number }>;
-  flags?: { title?: string; description?: string; severity?: string }[];
-  missing_clauses?: string[];
-  questions_to_ask?: { question?: string; reason?: string }[];
-  unverifiable?: string[];
-  audio_script_bn?: string;
-};
 
 const copy = {
   en: {
@@ -83,6 +73,15 @@ const copy = {
     missing: "Missing contract details",
     questions: "Questions to ask",
     audio: "Bangla audio guidance",
+    speak: "Play audio",
+    stopAudio: "Stop audio",
+    audioError: "Audio playback is not available in this browser.",
+    extractionTitle: "Details found in your document",
+    noExtractedFields: "No offer details could be extracted from this submission.",
+    source: "Source",
+    helplines: "Official support",
+    riskPendingTitle: "Risk assessment is not available yet",
+    riskPending: "Only document extraction has completed. No risk score or safety assessment has been produced.",
   },
   bn: {
     nav: ["হোম", "যেভাবে কাজ করে", "আমাদের সম্পর্কে", "সাহায্য"],
@@ -166,6 +165,15 @@ flags: "গুরুত্বপূর্ণ পর্যবেক্ষণ",
 missing: "চুক্তিতে অনুপস্থিত গুরুত্বপূর্ণ শর্ত",
 questions: "নিয়োগকর্তাকে যে প্রশ্নগুলো করবেন",
 audio: "বাংলা অডিও নির্দেশনা",
+speak: "অডিও চালান",
+stopAudio: "অডিও বন্ধ করুন",
+audioError: "এই ব্রাউজারে অডিও চালানো যাচ্ছে না।",
+extractionTitle: "আপনার নথি থেকে পাওয়া তথ্য",
+noExtractedFields: "এই জমা দেওয়া নথি থেকে কোনো চাকরির তথ্য পাওয়া যায়নি।",
+source: "সূত্র",
+helplines: "সরকারি সহায়তা",
+riskPendingTitle: "ঝুঁকি মূল্যায়ন এখনো পাওয়া যাচ্ছে না",
+riskPending: "শুধু নথি থেকে তথ্য সংগ্রহ করা হয়েছে। কোনো ঝুঁকির স্কোর বা নিরাপত্তা মূল্যায়ন করা হয়নি।",
   },
 };
 
@@ -181,7 +189,9 @@ export default function Home() {
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [result, setResult] = useState<AnalysisResponse | null>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [audioError, setAudioError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -190,6 +200,7 @@ export default function Home() {
   const t = copy[lang];
 
   function clearFile() {
+    if (preview) URL.revokeObjectURL(preview);
     setFile(null);
     setPreview("");
     if (fileRef.current) fileRef.current.value = "";
@@ -300,29 +311,15 @@ export default function Home() {
   async function analyze() {
     if (!file && !text.trim()) return;
 
+    stopSpeaking();
+    setIsSpeaking(false);
     setLoading(true);
     setError("");
     setResult(null);
 
     try {
-      const form = new FormData();
-      if (file) form.append("files", file);
-      if (text.trim()) form.append("text", text.trim());
-      form.append("language", lang);
-
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const response = await fetch(`${apiBase}/api/analyze`, {
-        method: "POST",
-        body: form,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.detail || t.error);
-      }
-
-      setResult(data as AnalysisResult);
+      const data = await analyzeOffer(file ? [file] : [], text, lang);
+      setResult(data);
       document.getElementById("analysis-result")?.scrollIntoView({ behavior: "smooth" });
     } catch (err) {
       setError(err instanceof Error ? err.message : t.error);
@@ -330,6 +327,37 @@ export default function Home() {
       setLoading(false);
     }
   }
+
+  async function playAudio() {
+    if (!result?.audio_script_bn) return;
+
+    setAudioError("");
+    setIsSpeaking(true);
+    try {
+      await speakBangla(result.audio_script_bn);
+    } catch {
+      setAudioError(t.audioError);
+    } finally {
+      setIsSpeaking(false);
+    }
+  }
+
+  function stopAudio() {
+    stopSpeaking();
+    setIsSpeaking(false);
+  }
+
+  useEffect(() => {
+    return () => stopSpeaking();
+  }, []);
+
+  const riskAssessmentPending = result?.unverifiable.includes(
+    "risk_assessment_pending_phase_2"
+  );
+  const extractedFields = result
+    ? Object.entries(result.extracted).filter(([, field]) => field.value?.trim())
+    : [];
+  const helplines = result?.helplines ?? [];
 
   const verdictIndex = result?.verdict === "danger" ? 0 : result?.verdict === "fewer_concerns" ? 2 : 1;
 
@@ -489,22 +517,41 @@ export default function Home() {
           <div className="mg-eyebrow"><i />{t.resultTitle}</div>
           <h2>{t.resultDesc}</h2>
           <div className={`result-card verdict-${result.verdict}`}>
-            <div className="result-top">
-              <span className="result-symbol">{result.verdict === "danger" ? "!" : result.verdict === "fewer_concerns" ? "✓" : "!"}</span>
-              <div><small>{t.score}</small><h3>{t.verdict[verdictIndex]}</h3></div>
-              <strong>{result.score}/100</strong>
-            </div>
-            <div className="score-track"><span style={{ width: `${result.score}%` }} /></div>
+            {riskAssessmentPending ? (
+              <div className="result-pending" role="status">
+                <h3>{t.riskPendingTitle}</h3>
+                <p>{t.riskPending}</p>
+              </div>
+            ) : (
+              <>
+                <div className="result-top">
+                  <span className="result-symbol">{result.verdict === "danger" ? "!" : result.verdict === "fewer_concerns" ? "✓" : "!"}</span>
+                  <div><small>{t.score}</small><h3>{t.verdict[verdictIndex]}</h3></div>
+                  <strong>{result.score}/100</strong>
+                </div>
+                <div className="score-track"><span style={{ width: `${result.score}%` }} /></div>
+              </>
+            )}
             <p className="result-summary">{result.input_summary}</p>
 
-            {result.flags && result.flags.length > 0 && <div className="result-list"><h4>{t.flags}</h4>{result.flags.map((flag, i) => <article key={i}><b>{flag.title || flag.severity || "Finding"}</b><p>{flag.description || ""}</p></article>)}</div>}
+            <div className="result-list">
+              <h4>{t.extractionTitle}</h4>
+              {extractedFields.length > 0 ? extractedFields.map(([name, field]) => (
+                <article key={name}>
+                  <b>{name.replace(/_/g, " ")}</b>
+                  <p>{field.value}</p>
+                  {field.source_snippet && <p><small>{t.source}: “{field.source_snippet}”</small></p>}
+                </article>
+              )) : <p>{t.noExtractedFields}</p>}
+            </div>
+            {result.flags.length > 0 && <div className="result-list"><h4>{t.flags}</h4>{result.flags.map((flag, i) => <article key={flag.id || flag.rule_id || i}><b>{flag.title}</b><p>{flag.explanation || flag.description || ""}</p>{flag.evidence_snippet && <p><small>{t.source}: “{flag.evidence_snippet}”</small></p>}</article>)}</div>}
             {result.missing_clauses && result.missing_clauses.length > 0 && <div className="result-list"><h4>{t.missing}</h4>{result.missing_clauses.map((item, i) => <p key={i}>• {item}</p>)}</div>}
             {result.questions_to_ask && result.questions_to_ask.length > 0 && <div className="result-list"><h4>{t.questions}</h4>{result.questions_to_ask.map((item, i) => <article key={i}><b>{item.question}</b><p>{item.reason}</p></article>)}</div>}
-            {result.audio_script_bn && <div className="result-list"><h4>{t.audio}</h4><p>{result.audio_script_bn}</p></div>}
-            {result.unverifiable && result.unverifiable.length > 0 && <p className="result-summary">{result.unverifiable.join(", ")}</p>}
+            {helplines.length > 0 && <div className="result-list"><h4>{t.helplines}</h4>{helplines.map((helpline) => <article key={`${helpline.name}-${helpline.number}`}><b>{helpline.name}</b><p><a href={`tel:${helpline.number}`}>{helpline.number}</a></p>{helpline.description && <p>{helpline.description}</p>}{helpline.hours && <p>{helpline.hours}</p>}</article>)}</div>}
+            {result.audio_script_bn && <div className="result-list"><h4>{t.audio}</h4><p>{result.audio_script_bn}</p><button type="button" onClick={isSpeaking ? stopAudio : playAudio}>{isSpeaking ? t.stopAudio : t.speak}</button>{audioError && <p role="alert">{audioError}</p>}</div>}
             <p className="result-disclaimer">{t.disclaimer}</p>
           </div>
-          <button className="yellow-button" onClick={() => { setResult(null); clearFile(); setText(""); document.getElementById("upload")?.scrollIntoView({ behavior: "smooth" }); }}>{t.tryAgain} →</button>
+          <button className="yellow-button" onClick={() => { stopAudio(); setAudioError(""); setResult(null); clearFile(); setText(""); document.getElementById("upload")?.scrollIntoView({ behavior: "smooth" }); }}>{t.tryAgain} →</button>
         </section>
       )}
 
