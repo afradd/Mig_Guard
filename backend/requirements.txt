@@ -7,4 +7,5 @@ google-genai==3.3.0
 pyyaml>=6.0.1
 pillow>=10.0.0
 pytesseract>=0.3.13
+edge-tts>=7.2.0
 pytest>=8.0.0

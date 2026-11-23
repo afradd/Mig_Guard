@@ -8,7 +8,7 @@ from typing import Sequence
 from app.api.schemas import AnalyzeResponse
 from app.config import settings
 from app.data.loader import helplines
-from app.llm.client import LLMExtractionError
+from app.llm.client import LLMExtractionError, LLMUsageLimitError
 from app.pipeline.explain import explain_flags
 from app.pipeline.extract import extract_offer_fields
 from app.pipeline.ocr import transcribe_images
@@ -20,6 +20,13 @@ logger = logging.getLogger(__name__)
 
 
 def _map_llm_error(exc: LLMExtractionError) -> AnalyzePipelineError:
+    if isinstance(exc, LLMUsageLimitError):
+        return AnalyzePipelineError(
+            code="AI_USAGE_LIMIT",
+            message_en="The AI usage limit has been reached. Please try again tomorrow.",
+            message_bn="এআই ব্যবহারের দৈনিক সীমা শেষ হয়েছে। আগামীকাল আবার চেষ্টা করুন।",
+            http_status=429,
+        )
     if exc.timed_out:
         return AnalyzePipelineError(
             code=TIMEOUT.code,

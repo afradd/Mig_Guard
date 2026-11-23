@@ -7,6 +7,7 @@ from fastapi import (
     File,
     Form,
     HTTPException,
+    Request,
     UploadFile,
 )
 from starlette.concurrency import run_in_threadpool
@@ -15,6 +16,7 @@ from app.api.schemas import AnalyzeResponse
 from app.config import settings
 from app.pipeline.orchestrator import analyze_document
 from app.utils.errors import AnalyzePipelineError
+from app.utils.rate_limit import RateLimiter
 
 router = APIRouter(tags=["analyze"])
 
@@ -25,14 +27,22 @@ ALLOWED_IMAGE_TYPES = {
 }
 
 MAX_IMAGES_PER_REQUEST = 4
+_rate_limiter = RateLimiter(settings.rate_limit_per_minute)
 
 
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_offer(
+    request: Request,
     files: Optional[list[UploadFile]] = File(default=None),
     text: Optional[str] = Form(default=None),
     language: str = Form(default="bn"),
 ) -> AnalyzeResponse:
+    client_host = request.client.host if request.client else "unknown"
+    if not _rate_limiter.allow(client_host):
+        raise HTTPException(
+            status_code=429,
+            detail="Too many analysis requests. Please try again in a minute.",
+        )
     cleaned_text = (text or "").strip()
     uploaded_files = files or []
 

@@ -16,6 +16,8 @@ from google.genai import types
 
 from app.api.schemas import OfferExtraction
 from app.config import settings
+from app.utils.pii_mask import mask_image_pii, mask_pii
+from app.utils.usage import UsageLimitExceeded, usage_guard
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +28,10 @@ class LLMExtractionError(Exception):
     def __init__(self, message: str, timed_out: bool = False) -> None:
         super().__init__(message)
         self.timed_out = timed_out
+
+
+class LLMUsageLimitError(LLMExtractionError):
+    """Raised when the configured model budget is exhausted."""
 
 
 PROMPT_PATH = (
@@ -87,7 +93,7 @@ def _build_contents(
     if text.strip():
         parts.append(
             types.Part.from_text(
-                text=f"Additional text supplied by the user:\n{text.strip()}"
+                text=f"Additional text supplied by the user:\n{mask_pii(text.strip())}"
             )
         )
     for index, (image_bytes, mime_type) in enumerate(images, start=1):
@@ -111,6 +117,7 @@ def _generate(
     timed_out = False
     for attempt in range(attempts):
         try:
+            usage_guard.reserve()
             client = _get_client(api_key)
             response = client.models.generate_content(
                 model=model,
@@ -122,6 +129,8 @@ def _generate(
                 raise ValueError(f"Model '{model}' returned an empty response.")
             return output_text
         except Exception as exc:
+            if isinstance(exc, UsageLimitExceeded):
+                raise LLMUsageLimitError(str(exc)) from exc
             last_error = exc
             timed_out = timed_out or _is_timeout(exc)
             if attempt < attempts - 1 and _is_retryable(exc):
@@ -177,6 +186,10 @@ def extract_structured_fields(
     text: str = "",
 ) -> OfferExtraction:
     prompt = _load_prompt()
+    try:
+        safe_images = mask_image_pii(images)
+    except RuntimeError as exc:
+        raise LLMExtractionError(str(exc)) from exc
     errors: list[Exception] = []
     timed_out = False
     for api_key, model in _model_chain():
@@ -184,7 +197,7 @@ def extract_structured_fields(
             return _call_gemini(
                 api_key=api_key,
                 model=model,
-                images=images,
+                images=safe_images,
                 text=text,
                 prompt=prompt,
             )
@@ -203,7 +216,7 @@ def generate_json(system_prompt: str, user_prompt: str) -> dict[str, Any]:
     """Free-form JSON call used for grounded explanations."""
     contents = [
         types.Part.from_text(text=system_prompt),
-        types.Part.from_text(text=user_prompt),
+        types.Part.from_text(text=mask_pii(user_prompt)),
     ]
     config = types.GenerateContentConfig(
         response_mime_type="application/json",
