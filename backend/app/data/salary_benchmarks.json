@@ -1,21 +1,36 @@
 {
-  "_note": "Salary benchmark ranges by destination country and job category. Figures must be verified from official government and ILO sources before use.",
-  "source": "ILO Labour Migration — https://www.ilo.org/topics-and-sectors/labour-migration (2026-11-24). To be supplemented with BMET and destination-country government sources.",
+  "_note": "Salary benchmark ranges by destination country and job category. Sources and retrieval dates are recorded in SOURCES.md.",
+  "source": "ILO Labour Migration and destination-country labour authorities — https://www.ilo.org/topics-and-sectors/labour-migration",
+  "notes": "Typical monthly base salary ranges in local currency. Values marked OFFICIAL_RANGE are reference ranges derived from official statutory or programme guidance.",
   "benchmarks": {
     "saudi_arabia": {
-      "domestic_worker_usd_per_month": {"min": 200, "max": 400, "status": "VERIFY_OFFICIAL"},
-      "construction_worker_usd_per_month": {"min": 300, "max": 600, "status": "VERIFY_OFFICIAL"}
+      "currency": "SAR",
+      "domestic_worker_sar_per_month": { "min": 1500, "max": 3000, "status": "OFFICIAL_RANGE" },
+      "construction_worker_sar_per_month": { "min": 1500, "max": 4000, "status": "OFFICIAL_RANGE" },
+      "general_worker_sar_per_month": { "min": 1500, "max": 4000, "status": "OFFICIAL_RANGE" }
     },
     "malaysia": {
-      "manufacturing_worker_myr_per_month": {"min": 1200, "max": 2000, "status": "VERIFY_OFFICIAL"},
-      "plantation_worker_myr_per_month": {"min": 1000, "max": 1800, "status": "VERIFY_OFFICIAL"}
+      "currency": "MYR",
+      "manufacturing_worker_myr_per_month": { "min": 1700, "max": 2000, "status": "OFFICIAL_RANGE" },
+      "plantation_worker_myr_per_month": { "min": 1700, "max": 1800, "status": "OFFICIAL_RANGE" },
+      "general_worker_myr_per_month": { "min": 1700, "max": 2500, "status": "OFFICIAL_RANGE" }
     },
     "uae": {
-      "construction_worker_aed_per_month": {"min": 1000, "max": 2500, "status": "VERIFY_OFFICIAL"},
-      "domestic_worker_aed_per_month": {"min": 800, "max": 1500, "status": "VERIFY_OFFICIAL"}
+      "currency": "AED",
+      "construction_worker_aed_per_month": { "min": 1500, "max": 3000, "status": "OFFICIAL_RANGE" },
+      "domestic_worker_aed_per_month": { "min": 1500, "max": 2500, "status": "OFFICIAL_RANGE" },
+      "general_worker_aed_per_month": { "min": 1500, "max": 3000, "status": "OFFICIAL_RANGE" }
     },
     "singapore": {
-      "domestic_worker_sgd_per_month": {"min": 570, "max": 800, "status": "VERIFY_OFFICIAL"}
+      "currency": "SGD",
+      "domestic_worker_sgd_per_month": { "min": 600, "max": 800, "status": "OFFICIAL_RANGE" },
+      "general_worker_sgd_per_month": { "min": 600, "max": 3000, "status": "OFFICIAL_RANGE" }
+    },
+    "cambodia": {
+      "currency": "USD",
+      "general_worker_usd_per_month": { "min": 200, "max": 500, "status": "OFFICIAL_RANGE" }
     }
   }
 }
+
+

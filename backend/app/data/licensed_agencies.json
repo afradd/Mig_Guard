@@ -1,6 +1,11 @@
 {
   "_note": "This file will hold licensed recruiting agency data from BMET. Official list must be fetched from https://bmet.gov.bd/ and verified before use. Placeholder entries only.",
-  "source": "Bangladesh Bureau of Manpower, Employment and Training (BMET) — https://bmet.gov.bd/",
+  "source": "BMET Official Licensed Recruiting Agencies List (log exact URL and date in SOURCES.md)",
   "retrieved": "VERIFY_DATE",
-  "agencies": []
+  "agencies": {
+    "RL-0000": {
+      "name": "SAMPLE_REPLACE_WITH_REAL_BMET_AGENCY",
+      "status": "VERIFY_OFFICIAL_SOURCE"
+    }
+  }
 }
