@@ -1,4 +1,6 @@
-#Defines the initial request/response models for /api/health and /api/analyze.
+# Pydantic models shared across the whole backend.
+# Defines request/response shapes for /api/health and /api/analyze.
+# OfferExtraction is also used as the structured-output schema sent to Gemini.
 from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
@@ -9,9 +11,74 @@ class HealthResponse(BaseModel):
     env: str
 
 class ExtractedField(BaseModel):
-    value: Optional[str] = None
-    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
-    source_snippet: str = ""
+    value: Optional[str] = Field(
+        default=None,
+        description="Extracted value from the document. Null if absent."
+    )
+    confidence: float = Field(
+        default=0.0,
+        description=(
+            "Model-estimated extraction confidence. "
+            "Raw value from the LLM; pipeline/extract.py clamps it to [0, 1]."
+        )
+    )
+    source_snippet: str = Field(
+        default="",
+        description="Exact text from the original document supporting this value."
+    )
+
+class OfferExtraction(BaseModel):
+    destination: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    employer: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    job_title: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    salary: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    fee_asked: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    visa_type: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    duration: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    hours: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    accommodation: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    agent: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    license_number: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    payment_method: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
+
+    contact_channel: ExtractedField = Field(
+        default_factory=ExtractedField
+    )
 
 class AnalyzeResponse(BaseModel):
     verdict: VerdictType = "caution"

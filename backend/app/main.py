@@ -1,4 +1,6 @@
-# Wires CORS, /api/health, and /api/analyze
+# FastAPI application entry point.
+# Wires CORS middleware, the health route, and the analyze route.
+# Start with: uvicorn app.main:app --reload (from the backend/ directory)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
