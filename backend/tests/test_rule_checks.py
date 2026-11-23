@@ -87,7 +87,10 @@ def test_engine_uses_catalog_metadata_and_check_evidence():
         "R06_MISSING_CRITICAL_CLAUSES",
         "R07_MISSING_AGENCY_LICENSE",
         "R11_PRESSURE_TACTICS",
+        "R15_UNVERIFIABLE_EMPLOYER",
     ]
     assert flags[0]["severity"] == "high"
     assert flags[0]["title_en"] == "No formal written contract"
-    assert flags[-1]["evidence_snippet"] == "Pay today or lose this offer."
+    flag_map = {f["rule_id"]: f for f in flags}
+    assert flag_map["R11_PRESSURE_TACTICS"]["evidence_snippet"] == "Pay today or lose this offer."
+
