@@ -1,4 +1,6 @@
-# Wires CORS, /api/health, and /api/analyze
+# FastAPI application entry point.
+# Wires CORS middleware, the health route, and the analyze route.
+# Start with: uvicorn app.main:app --reload (from the backend/ directory)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,10 +13,12 @@ app = FastAPI(
     version="0.1.0",
 )
 
+is_wildcard = "*" in settings.allowed_origins
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,
-    allow_credentials=True,
+    allow_credentials=not is_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )
