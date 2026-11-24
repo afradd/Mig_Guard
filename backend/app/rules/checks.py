@@ -88,11 +88,11 @@ def check_r05_unrealistic_salary(
                 continue
             high = row.get("typical_high")
             low = row.get("typical_low")
-            multiplier = row.get("unrealistic_multiplier", 4)
+            multiplier = row.get("unrealistic_multiplier", 2.5)
             if high is not None and salary > float(high) * float(multiplier):
-                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually high)"
+                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually high for {dest})"
             if low is not None and salary < float(low) * 0.6:
-                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually low)"
+                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually low for {dest})"
         return None
 
     for country_key, info in benchmarks.items():

@@ -31,6 +31,7 @@ Every figure used by verification checks is listed here. Re-check live official 
 - Bangladesh Police - Hot Line Numbers: https://police.gov.bd (999, 109, 333).
 - Ministry of Expatriates' Welfare and Overseas Employment: +880-2-41030444 (https://probashi.gov.bd).
 
+## Knowledge Base & International Standards
 ## Fees and Recruiting Agencies
 
 The Bangladesh fee-and-agency guidance was checked on 2026-11-24.
@@ -66,21 +67,23 @@ The contract checklist was checked on 2026-11-24.
 
 ## Salary Benchmarks
 
-Salary ranges in `salary_benchmarks.json` were collected and checked on 2026-11-24.
+The links below provide destination-country employment and wage-policy context. The ranges in `salary_benchmarks.json` are indicative screening bands, not official per-role wage awards; these links do not establish every range.
 
 - [Saudi Musaned — official domestic recruitment platform](https://musaned.gov.sa/en)
-  - Used for Saudi salary-contract and domestic-worker employment reference ranges.
+  - Official domestic recruitment and contract context; not a universal wage table.
 - [Malaysia Ministry of Human Resources — minimum wages](https://jtksm.mohr.gov.my/en/mandatori/wages/minimum-wages)
-  - Used for the 2025 Malaysian minimum-wage floor of RM1,700 per month.
+  - Official minimum-wage information; role-specific wages and applicable dates must be checked with the ministry.
 - [United Arab Emirates Ministry of Human Resources and Emiratisation](https://www.mohre.gov.ae/en/home.aspx)
-  - Used for UAE employment-contract and wage-reference guidance.
+  - Official employment-contract and wage-policy context.
 - [Singapore Ministry of Manpower — Employment Practices](https://www.mom.gov.sg/employment-practices)
-  - Used for Singapore employment and salary-practice guidance.
+  - Official employment-practice context; not a universal wage table.
 - [Cambodia Ministry of Labour and Vocational Training](https://mlvt.gov.kh/)
-  - Used as the Cambodian labour-authority source for the general-worker reference range.
+  - Official labour-authority context; confirm current occupation-specific rules directly.
 - [ILO Labour Migration](https://www.ilo.org/topics-and-sectors/labour-migration)
   - Cross-reference for labour-migration salary context.
-## Knowledge Base & International Standards
+
+## International Labour Standards
+
 
 - ILO Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration
 - ILO International Labour Standards and Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration/international-labour-standards-and-labour-migration

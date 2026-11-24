@@ -13,10 +13,7 @@ AGENCIES_PATH = BASE_DIR / "data" / "licensed_agencies.json"
 
 
 def _load_json(path: Path) -> Dict[str, Any]:
-    if not path.exists():
-        return {}
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def load_catalog() -> Dict[str, Any]:
@@ -32,7 +29,15 @@ def load_benchmarks() -> Dict[str, Any]:
 
 
 def load_agencies() -> Dict[str, Any]:
-    return _load_json(AGENCIES_PATH)
+    data = _load_json(AGENCIES_PATH)
+    agencies = data.get("agencies", {})
+    if isinstance(agencies, list):
+        return {
+            str(row.get("license_no", "")).lower(): row
+            for row in agencies
+            if row.get("license_no")
+        }
+    return agencies
 
 
 def evaluate_rules(extracted: Dict[str, Any]) -> Dict[str, Any]:

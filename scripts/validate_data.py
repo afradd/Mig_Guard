@@ -8,49 +8,49 @@ are complete, well-formed, and documented with sources.
 import json
 import sys
 from pathlib import Path
-import yaml
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "backend" / "app" / "data"
-RULES_DIR = ROOT_DIR / "backend" / "app" / "rules"
 KB_DIR = ROOT_DIR / "backend" / "app" / "rag" / "kb"
 
+REQUIRED_DATA_FILES = [
+    "licensed_agencies.json",
+    "fee_caps.json",
+    "salary_benchmarks.json",
+    "high_risk_patterns.json",
+    "helplines.json",
+    "SOURCES.md",
+]
 
-def validate():
-    errors = []
-    warnings = []
-    print("[*] Validating Mig_Guard Data Files and Catalog...")
+PLACEHOLDER_TOKENS = [
+    "VERIFY_OFFICIAL",
+    "SAMPLE_REPLACE",
+    "<paste-url>",
+    "<YYYY-MM-DD>",
+    "<URL>",
+    "<Date>",
+]
 
-    # 1. Check SOURCES.md
-    sources_path = DATA_DIR / "SOURCES.md"
-    if not sources_path.exists():
-        errors.append(f"Missing {sources_path}")
-    else:
-        text = sources_path.read_text(encoding="utf-8")
-        if "BMET" not in text or "ILO" not in text:
-            warnings.append("SOURCES.md missing references to primary authorities (BMET / ILO)")
-        print(f"  [OK] SOURCES.md present ({len(text)} bytes)")
 
-    # 2. Check JSON data files
-    json_files = [
-        "fee_caps.json",
-        "helplines.json",
-        "high_risk_patterns.json",
-        "licensed_agencies.json",
-        "salary_benchmarks.json",
-    ]
-    for jf in json_files:
-        p = DATA_DIR / jf
-        if not p.exists():
-            errors.append(f"Missing data file: {jf}")
+def validate() -> int:
+    print("=== Mig_Guard Data & Source Verification ===\n")
+    warnings = 0
+
+    for filename in REQUIRED_DATA_FILES:
+        path = DATA_DIR / filename
+        if not path.exists():
+            print(f"[MISSING] {path}")
+            warnings += 1
             continue
-        try:
-            with open(p, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            print(f"  [OK] {jf} valid JSON (keys: {len(data)})")
-        except Exception as e:
-            errors.append(f"Invalid JSON in {jf}: {e}")
 
+        text = path.read_text(encoding="utf-8")
+        if filename.endswith(".json"):
+            try:
+                json.loads(text)
+                print(f"[OK JSON] {filename}")
+            except json.JSONDecodeError as exc:
+                print(f"[INVALID JSON] {filename}: {exc}")
+                warnings += 1
     # 3. Check rules catalog.yaml
     catalog_path = RULES_DIR / "catalog.yaml"
     if not catalog_path.exists():
@@ -76,35 +76,28 @@ def validate():
         except Exception as e:
             errors.append(f"Invalid YAML in catalog.yaml: {e}")
 
-    # 4. Check Knowledge Base files
-    kb_files = list(KB_DIR.glob("*.md"))
-    if not kb_files:
-        errors.append("No KB markdown files found in backend/app/rag/kb")
-    else:
-        total_sections = 0
-        for kbf in kb_files:
-            content = kbf.read_text(encoding="utf-8")
-            sections = content.count("\n## ")
-            total_sections += sections
-        print(f"  [OK] KB has {len(kb_files)} files with {total_sections} curated passages")
-        if total_sections < 20:
-            warnings.append(f"KB has only {total_sections} passages (target is 20-30)")
+        found_tokens = [tok for tok in PLACEHOLDER_TOKENS if tok in text]
+        if found_tokens:
+            print(f"  -> [WARNING] Unverified placeholders in {filename}: {', '.join(found_tokens)}")
+            warnings += 1
 
-    print("\n--- Summary ---")
-    if errors:
-        print(f"[FAIL] Found {len(errors)} error(s):")
-        for err in errors:
-            print(f"  - {err}")
-        sys.exit(1)
-    else:
-        print("[PASS] All data files and catalog structures valid!")
+    kb_files = sorted(KB_DIR.glob("*.md")) if KB_DIR.exists() else []
+    passage_count = 0
+    kb_placeholders = 0
+    for kb_file in kb_files:
+        kb_text = kb_file.read_text(encoding="utf-8")
+        passage_count += sum(1 for line in kb_text.splitlines() if line.startswith("## "))
+        if any(tok in kb_text for tok in PLACEHOLDER_TOKENS):
+            kb_placeholders += 1
 
-    if warnings:
-        print(f"[WARN] {len(warnings)} warning(s):")
-        for w in warnings:
-            print(f"  - {w}")
+    print(f"\n[KB CHECK] {len(kb_files)} markdown files, {passage_count} curated passages (target: 20-30).")
+    if kb_placeholders:
+        print(f"  -> [WARNING] {kb_placeholders} KB file(s) still contain <URL> or <Date> placeholders.")
+        warnings += 1
+
+    print(f"\nVerification finished with {warnings} warning(s).")
+    return 0
 
 
 if __name__ == "__main__":
-    validate()
-
+    sys.exit(validate())

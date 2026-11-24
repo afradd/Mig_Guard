@@ -12,8 +12,8 @@
 | `legit_08_qatar_construction_en` | legit | 0 | 0 | - | - |
 | `scam_01_cambodia_crypto_chat` | scam | 12 | 12 | - | - |
 | `scam_02_visit_visa_deduction_bn` | scam | 8 | 8 | - | - |
-| `scam_03_laos_typing_telegram_en` | scam | 10 | 12 | - | R05_UNREALISTIC_SALARY, R14_TOO_GOOD_TO_BE_TRUE_BUNDLE |
-| `scam_04_myanmar_marketing_bn` | scam | 9 | 11 | - | R05_UNREALISTIC_SALARY, R14_TOO_GOOD_TO_BE_TRUE_BUNDLE |
+| `scam_03_laos_typing_telegram_en` | scam | 12 | 12 | - | - |
+| `scam_04_myanmar_marketing_bn` | scam | 11 | 11 | - | - |
 | `scam_05_dubai_tourist_visa_cash_en` | scam | 8 | 8 | - | - |
 | `scam_06_malaysia_passport_seizure_bn` | scam | 10 | 10 | - | - |
 | `scam_07_saudi_debt_bondage_en` | scam | 8 | 8 | - | - |
@@ -24,6 +24,6 @@
 | `scam_12_malaysia_hand_to_hand_bn` | scam | 10 | 10 | - | - |
 
 ## Summary Metrics
-- **Scam Red-Flag Recall:** 113/113 (100.0%)
+- **Scam Red-Flag Recall:** 117/117 (100.0%)
 - **False Alarms on Legitimate Offers:** 0
 - **Note:** Evaluated on a small synthetic dataset of Bangla and English offers; no real worker documents were used.

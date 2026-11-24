@@ -1,4 +1,4 @@
-# Mig_Guard
+# Mig_Guard (Job Offer Checker for Migrant Workers)
 
 > AI-Powered Job Offer, Contract & Recruiter Chat Verification for Bangladeshi Overseas Migrant Workers.
 
