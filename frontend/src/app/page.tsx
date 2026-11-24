@@ -544,9 +544,9 @@ export default function Home() {
                 </article>
               )) : <p>{t.noExtractedFields}</p>}
             </div>
-            {result.flags.length > 0 && <div className="result-list"><h4>{t.flags}</h4>{result.flags.map((flag, i) => <article key={flag.id || flag.rule_id || i}><b>{flag.title}</b><p>{flag.explanation || flag.description || ""}</p>{flag.evidence_snippet && <p><small>{t.source}: “{flag.evidence_snippet}”</small></p>}</article>)}</div>}
+            {result.flags.length > 0 && <div className="result-list"><h4>{t.flags}</h4>{result.flags.map((flag) => <article key={flag.rule_id}><b>{lang === "bn" ? flag.title_bn : flag.title_en}</b><p>{lang === "bn" ? flag.explanation_bn : flag.explanation_en}</p>{flag.evidence_snippet && <p><small>{t.source}: “{flag.evidence_snippet}”</small></p>}</article>)}</div>}
             {result.missing_clauses && result.missing_clauses.length > 0 && <div className="result-list"><h4>{t.missing}</h4>{result.missing_clauses.map((item, i) => <p key={i}>• {item}</p>)}</div>}
-            {result.questions_to_ask && result.questions_to_ask.length > 0 && <div className="result-list"><h4>{t.questions}</h4>{result.questions_to_ask.map((item, i) => <article key={i}><b>{item.question}</b><p>{item.reason}</p></article>)}</div>}
+            {result.questions_to_ask && result.questions_to_ask.length > 0 && <div className="result-list"><h4>{t.questions}</h4>{result.questions_to_ask.map((item, i) => <article key={i}><b>{lang === "bn" ? item.bn : item.en}</b></article>)}</div>}
             {helplines.length > 0 && <div className="result-list"><h4>{t.helplines}</h4>{helplines.map((helpline) => <article key={`${helpline.name}-${helpline.number}`}><b>{helpline.name}</b><p><a href={`tel:${helpline.number}`}>{helpline.number}</a></p>{helpline.description && <p>{helpline.description}</p>}{helpline.hours && <p>{helpline.hours}</p>}</article>)}</div>}
             {result.audio_script_bn && <div className="result-list"><h4>{t.audio}</h4><p>{result.audio_script_bn}</p><button type="button" onClick={isSpeaking ? stopAudio : playAudio}>{isSpeaking ? t.stopAudio : t.speak}</button>{audioError && <p role="alert">{audioError}</p>}</div>}
             <p className="result-disclaimer">{t.disclaimer}</p>

@@ -7,18 +7,21 @@ export interface ExtractedField {
 }
 
 export interface RedFlag {
-  id?: string;
-  rule_id?: string;
-  title: string;
-  severity: "high" | "medium" | "low" | "danger" | "caution";
-  explanation?: string;
-  description?: string;
+  rule_id: string;
+  severity: string;
+  weight: number;
+  title_en: string;
+  title_bn: string;
+  explanation_en: string;
+  explanation_bn: string;
   evidence_snippet?: string;
+  question_en?: string;
+  question_bn?: string;
 }
 
 export interface QuestionToAsk {
-  question: string;
-  reason?: string;
+  en: string;
+  bn: string;
 }
 
 export interface Helpline {
