@@ -33,6 +33,56 @@ Every figure used by verification checks is listed here. Re-check live official 
 
 ## Knowledge Base & International Standards
 
+## Fees and Recruiting Agencies
+
+The Bangladesh fee-and-agency guidance was checked on 2026-11-24.
+
+- [BMET Official Portal](https://bmet.gov.bd/)
+  - Recruiting-license verification and pre-departure clearance reference.
+- [Ministry of Expatriates' Welfare and Overseas Employment](https://probashi.gov.bd/)
+  - Official ministry portal for migration-cost and overseas-employment guidance.
+- [ILO Fair Recruitment](https://www.ilo.org/topics-and-sectors/fair-recruitment)
+  - International fair-recruitment and traceable-payment reference.
+
+## Scam Patterns and Migrant Rights
+
+The scam-pattern and worker-rights guidance was checked on 2026-11-24.
+
+- [UNODC Southeast Asia organized-crime report](https://www.unodc.org/roseap/en/2026/07/south-east-asia-interconnected-criminal-economy/story.html)
+  - Reference for cyber-fraud compounds and trafficking in persons for forced criminality.
+- [ILO Fair Recruitment](https://www.ilo.org/topics-and-sectors/fair-recruitment)
+  - Reference for worker protection, freedom of movement, and regulated recruitment.
+- [ILO General Principles and Operational Guidelines for Fair Recruitment](https://www.ilo.org/publications/general-principles-and-operational-guidelines-fair-recruitment)
+  - Reference for recruitment fees and preventing worker debt.
+
+## Overseas Contract Checklist
+
+The contract checklist was checked on 2026-11-24.
+
+- [BMET Official Portal](https://bmet.gov.bd/)
+  - Reference for Bangladesh employment, emigration, and pre-departure procedures.
+- [ILO Fair Recruitment](https://www.ilo.org/topics-and-sectors/fair-recruitment)
+  - Reference for transparent terms and regulated recruitment practices.
+- [ILO Labour Migration](https://www.ilo.org/topics-and-sectors/labour-migration)
+  - Reference for migrant-worker protection and labour-migration governance.
+
+## Salary Benchmarks
+
+The links below provide destination-country employment and wage-policy context. The ranges in `salary_benchmarks.json` are indicative screening bands, not official per-role wage awards; these links do not establish every range.
+
+- [Saudi Musaned — official domestic recruitment platform](https://musaned.gov.sa/en)
+  - Official domestic recruitment and contract context; not a universal wage table.
+- [Malaysia Ministry of Human Resources — minimum wages](https://jtksm.mohr.gov.my/en/mandatori/wages/minimum-wages)
+  - Official minimum-wage information; role-specific wages and applicable dates must be checked with the ministry.
+- [United Arab Emirates Ministry of Human Resources and Emiratisation](https://www.mohre.gov.ae/en/home.aspx)
+  - Official employment-contract and wage-policy context.
+- [Singapore Ministry of Manpower — Employment Practices](https://www.mom.gov.sg/employment-practices)
+  - Official employment-practice context; not a universal wage table.
+- [Cambodia Ministry of Labour and Vocational Training](https://mlvt.gov.kh/)
+  - Official labour-authority context; confirm current occupation-specific rules directly.
+- [ILO Labour Migration](https://www.ilo.org/topics-and-sectors/labour-migration)
+  - Cross-reference for labour-migration salary context.
+
 - ILO Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration
 - ILO International Labour Standards and Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration/international-labour-standards-and-labour-migration
 - ILO Fair Recruitment: https://www.ilo.org/topics-and-sectors/fair-recruitment
