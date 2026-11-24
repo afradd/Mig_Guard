@@ -22,6 +22,12 @@ app = FastAPI(
     version="0.1.0",
 )
 
+
+@app.get("/")
+@app.head("/")
+def service_root():
+    return {"status": "ok", "service": "Mig_Guard"}
+
 is_wildcard = "*" in settings.allowed_origins
 
 app.add_middleware(
