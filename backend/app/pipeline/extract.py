@@ -6,6 +6,7 @@ from typing import Sequence
 
 from app.api.schemas import OfferExtraction
 from app.llm.client import extract_structured_fields  # fixed import path
+from app.utils.pii_mask import mask_extraction_pii
 
 
 def extract_offer_fields(
@@ -21,6 +22,7 @@ def extract_offer_fields(
         images=images,
         text=text,
     )
+    mask_extraction_pii(extraction)
 
     # Enforce: every accepted field must have both a value and a source snippet.
     for field_name in OfferExtraction.model_fields:
