@@ -1,3 +1,10 @@
+
+"""
+validate_data.py
+Checks that all official data files, rules catalog, and knowledge base files
+are complete, well-formed, and documented with sources.
+"""
+
 import json
 import sys
 from pathlib import Path
@@ -44,6 +51,30 @@ def validate() -> int:
             except json.JSONDecodeError as exc:
                 print(f"[INVALID JSON] {filename}: {exc}")
                 warnings += 1
+    # 3. Check rules catalog.yaml
+    catalog_path = RULES_DIR / "catalog.yaml"
+    if not catalog_path.exists():
+        errors.append("Missing catalog.yaml")
+    else:
+        try:
+            with open(catalog_path, "r", encoding="utf-8") as f:
+                catalog = yaml.safe_load(f)
+            rules_to_check = {}
+            if "rules" in catalog and isinstance(catalog["rules"], dict):
+                rules_to_check.update(catalog["rules"])
+            for rid, meta in catalog.items():
+                if rid not in {"verdicts", "rules"} and isinstance(meta, dict):
+                    rules_to_check[rid] = meta
+            rule_count = len(rules_to_check)
+            print(f"  [OK] catalog.yaml valid YAML with {rule_count} rules")
+            if rule_count < 15:
+                warnings.append(f"Catalog has only {rule_count}/15 expected rules")
+            for rid, meta in rules_to_check.items():
+                for field in ["severity", "weight", "title_en", "title_bn", "explanation_en", "explanation_bn", "question_en", "question_bn"]:
+                    if field not in meta:
+                        errors.append(f"Rule {rid} missing required field '{field}'")
+        except Exception as e:
+            errors.append(f"Invalid YAML in catalog.yaml: {e}")
 
         found_tokens = [tok for tok in PLACEHOLDER_TOKENS if tok in text]
         if found_tokens:

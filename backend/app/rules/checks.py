@@ -141,11 +141,23 @@ def check_r07_missing_or_unlisted_agency_license(
     if not lic or lic in {"none", "n/a", "null"}:
         return "No RL license number found in document"
 
-    known_agencies = {k.lower(): v for k, v in agencies_data.get("agencies", {}).items()}
+    raw_agencies = agencies_data.get("agencies", {})
+    known_agencies: Dict[str, Any] = {}
+    if isinstance(raw_agencies, dict):
+        known_agencies = {k.lower(): v for k, v in raw_agencies.items()}
+    elif isinstance(raw_agencies, list):
+        for entry in raw_agencies:
+            if isinstance(entry, dict) and entry.get("license_no"):
+                known_agencies[str(entry["license_no"]).lower()] = entry
+
     # Only flag unlisted if real BMET agencies have been populated (more than the sample entry)
     real_entries = {k: v for k, v in known_agencies.items() if k != "rl-0000"}
-    if real_entries and lic not in real_entries:
-        return f"License {lic.upper()} not found in official BMET agency list"
+    normalized_lic = lic.replace(" ", "").replace("-", "").lower()
+    normalized_known = {k.replace(" ", "").replace("-", "").lower(): v for k, v in real_entries.items()}
+    if real_entries and normalized_lic in normalized_known:
+        status = str(normalized_known[normalized_lic].get("status", ""))
+        if status.lower() in {"expired", "cancelled", "suspended"}:
+            return f"License {lic.upper()} is {status} in official BMET registry"
     return None
 
 

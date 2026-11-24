@@ -2,6 +2,7 @@
 # Sits between the route handler and the LLM client so the route never sees
 # partially-filled or inconsistent ExtractedField objects.
 
+import math
 from typing import Sequence
 
 from app.api.schemas import OfferExtraction
@@ -28,8 +29,10 @@ def extract_offer_fields(
     for field_name in OfferExtraction.model_fields:
         field = getattr(extraction, field_name)
 
-        has_value = field.value is not None and field.value.strip()
-        has_snippet = field.source_snippet.strip()
+        value = field.value
+        source_snippet = field.source_snippet
+        has_value = isinstance(value, str) and bool(value.strip())
+        has_snippet = isinstance(source_snippet, str) and bool(source_snippet.strip())
 
         if not has_value or not has_snippet:
             # Reject — missing evidence means the field cannot be trusted.
@@ -38,8 +41,12 @@ def extract_offer_fields(
             field.source_snippet = ""
         else:
             # Clean whitespace and clamp confidence to valid range.
-            field.value = field.value.strip()
-            field.source_snippet = field.source_snippet.strip()
-            field.confidence = max(0.0, min(1.0, field.confidence))
-
+            field.value = value.strip() if isinstance(value, str) else value
+            field.source_snippet = source_snippet.strip()
+            confidence = float(field.confidence)
+            field.confidence = (
+                max(0.0, min(1.0, confidence))
+                if math.isfinite(confidence)
+                else 0.0
+            )
     return extraction

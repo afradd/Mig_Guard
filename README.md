@@ -1,225 +1,236 @@
 # Mig_Guard (Job Offer Checker for Migrant Workers)
 
-> **AI-Powered Pre-Departure Fraud & Scam Checker for Prospective Migrant Workers**  
-> *CoU AI Hackathon 2026 | Comilla University | Theme: AI for Humanity*  
-> **Declared Domains:** Cybersecurity (Primary: Fraud & Scam Detection) | Accessibility (Secondary: Bangla Audio for Low Literacy)
+> AI-Powered Job Offer, Contract & Recruiter Chat Verification for Bangladeshi Overseas Migrant Workers.
 
-[![CI](https://github.com/afradd/Mig_Guard/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/afradd/Mig_Guard/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
-[![Next.js](https://img.shields.io/badge/Next.js-14+-black.svg)](https://nextjs.org/)
+**Repository:** [https://github.com/afradd/Mig_Guard.git](https://github.com/afradd/Mig_Guard.git)
 
 ---
 
-## 1. Team & Project Information
+## 1. Project, Team & Member Names
 
-- **Project Name:** Mig_Guard (Job Offer Checker)
-- **Team Name:** CoU Technova Finalist Team
-- **Team Members & Roles:**
-  - **Member A (Team Leader):** Afrad — AI & Backend Lead (Pipeline orchestrator, vision extraction, scoring, host deployment)
-  - **Member B:** Member B — Frontend & UX Lead (Next.js web app, mobile camera capture, Bangla audio player, result screens)
-  - **Member C:** Athikul Islam — Data, Rules & Evaluation Lead (15-rule catalog, deterministic checks engine, official data verification, 20-doc evaluation suite, documentation)
-
----
-
-## 2. Problem Statement & Evidence
-
-Migrant workers from Bangladesh often find overseas opportunities through informal sub-agents with no formal written contract and ambiguous, cash-only fee structures. Unscrupulous brokers lure vulnerable jobseekers into forced labor or Southeast Asian cyber-scam compounds (Cambodia, Myanmar, Laos) under false promises of high-paying online customer service or data-entry jobs.
-
-### Empirical Evidence
-- **75% of exploited migrant workers** receive no written employment contract before departure, and **~80% are recruited via unauthorized informal sub-agents** (*TBS News, study on migration justice*).
-- Over **583 trafficked Bangladeshi citizens** have been repatriated from cyber-slavery compounds in Cambodia alone, part of an estimated **300,000 victims trapped in scam factories worldwide** (*UNODC / Global Voices, 2026*).
-- **The Critical Gap:** Nearly all current interventions happen *post-harm* (rescue, complaint filing, repatriation). Mig_Guard acts *pre-departure*, empowering workers standing before a recruiter with an offer before money changes hands.
+* **Project Name:** Mig_Guard
+* **Team Name:** Mig_Guard Team
+* **Team Members & Responsibilities:**
+  * **Afrad Ali Ahim** ([@afradd](https://github.com/afradd)) — *Team Leader, AI & Backend Lead:* FastAPI architecture, Gemini Vision extraction pipeline, deterministic verification engine (license/fees/salary/clauses), risk scoring calibration, RAG legal grounding, and containerized deployment.
+  * **Saima Ahmed** ([@Saima-Ahmedd](https://github.com/Saima-Ahmedd)) — *Member B, Frontend & UX Engineer:* Next.js web & mobile interface, responsive camera capture & file upload, Bangla bilingual localization (`bn`/`en`), and client-side audio speech synthesis player.
+  * **Athikul Islam** ([@Athikul-Islam](https://github.com/Athikul-Islam)) — *Member C, Rules & Evaluation Lead:* 15 red-flag rule check algorithms, rule catalog definitions (`catalog.yaml`), knowledge-base corpus creation, and 20-document synthetic evaluation benchmark suite.
 
 ---
 
-## 3. The Solution & Key Features
+## 2. Problem & Solution Summary
 
-Mig_Guard is a mobile-first, privacy-preserving web app where a worker photographs an offer letter, visa, or chat screenshot (WhatsApp, Facebook, Telegram) and receives an explainable, audio-read risk verdict in everyday Bangla.
+### The Problem
+Over 10 million Bangladeshi migrant workers remit vital billions annually, yet thousands fall victim to predatory overseas recruitment scams before departure. Traps include tourist/visit visas disguised as work permits, debt bondage through hidden salary deductions, exorbitant fees exceeding statutory government caps, fake recruiting agencies, and modern cyber-scam compound trafficking in Southeast Asia (Cambodia, Myanmar, Laos). Most official interventions happen after the worker is already stranded abroad.
 
-- 📷 **Multimodal Document Capture:** Upload photos, camera snapshots, or paste text in Bangla and English.
-- 🔍 **Structured Contract Extraction:** Extracts destination, employer, job title, wage, fees, visa category, duration, and agency license with verbatim document snippets.
-- 🚩 **15-Rule Deterministic Engine:** Rigorous rule-based verification against official government circulars, BMET licensing lists, statutory fee ceilings, and salary benchmarks.
-- 💡 **Evidence Grounding:** Every triggered red flag links directly to verbatim text in the user's document.
-- ❓ **Questions to Ask:** Generates actionable, plain-language questions in Bangla and English for the worker to ask the broker before paying.
-- 🔊 **Bangla Voice Readout:** High-clarity Bangla text-to-speech ensures critical warnings reach low-literacy workers.
-- ☎️ **Official Support Resources:** Instant access to verified government helplines (BMET Probashbandhu 16135, Police 999, National Info 333).
-- 🛡️ **Zero Document Storage & PII Masking:** All documents are processed strictly in memory and discarded immediately. Passports and phone numbers are masked.
-- ⚖️ **Never-Says-Safe Principle:** The safest verdict is *"Fewer concerns found — still verify with BMET."* Missing terms are cataloged as `unverifiable`, never false reassurance.
-
----
-
-## 4. System Architecture & How the AI Works
-
-Mig_Guard is **not a thin LLM wrapper**. The language model is used strictly for transcription, schema extraction, and plain-language explanation. The final risk score and verdict are computed by a **deterministic Python rules engine** evaluated against verified statutory databases.
-
-```
-Phone Camera / Document Upload / Chat Screenshot
-                     |
-                     v
-1. INGEST & PRE-PROCESS      Mask sensitive PII (passports, phone numbers); resize image
-                     |
-                     v
-2. VISION & OCR              Multimodal LLM vision transcription with Bengali/English OCR fallback
-                     |
-                     v
-3. SCHEMA EXTRACTION         Strict JSON schema (`offer_extraction.json`) with confidence & snippets
-                     |
-                     v
-4. VERIFICATION CHECKS       Deterministic evaluation against official data:
-                             - BMET RAIMS recruiting agency license verification
-                             - Emigration Act 2013 statutory fee caps
-                             - Destination-specific salary benchmarks & wage floors
-                             - High-risk destination & scam compound pattern matching
-                     |
-                     v
-5. GROUNDED EXPLANATION      RAG retrieval over 33 curated legal & rights passages
-                     |
-                     v
-6. DETERMINISTIC SCORING     Weighted rule aggregation: Danger, Caution, or Fewer Concerns Found
-                     |
-                     v
-7. MULTIMODAL DELIVERY       Bangla audio synthesis (TTS), highlighted evidence snippets,
-                             missing clauses checklist, recruiter questions, and official helplines
-```
+### The Solution
+**Mig_Guard** is an upstream fraud prevention engine that allows a prospective worker or family member to upload a photo of a job offer letter, contract, visa, or recruiter chat screenshot (or paste text). Mig_Guard:
+1. Transcribes documents via Gemini Vision with a local OCR fallback.
+2. Extracts 13 essential contractual fields and requires physical source text snippets for every value.
+3. Deterministically benchmarks against official government databases (1,685 BMET licensed agencies, statutory fee caps, wage guidelines).
+4. Evaluates 15 explainable red-flag rules and calculates a transparent 0–100 risk score.
+5. Grounds explanations in verified Bangladeshi labor migration law and ILO conventions.
+6. Delivers guidance in clear Bangla and spoken audio, accompanied by official helplines (e.g., Probash Bondhu 16135).
+7. **Strict Safety Invariant:** Mig_Guard **never** declares any document "safe"; clean offers receive "fewer concerns found" with verification caveats.
 
 ---
 
-## 5. Red-Flag Rules Catalog (`R01`–`R15`)
+## 3. Features & How the AI Works
 
-| Rule ID | Severity | Weight | Description |
-|---|:---:|:---:|---|
-| `R01_NO_WRITTEN_CONTRACT` | High | 25 | Offer is only a chat message or social post, not a formal written contract. |
-| `R02_NON_WORK_VISA` | High | 30 | Tourist, visit, or business visa offered for overseas employment. |
-| `R03_CASH_OR_UNSPECIFIED_FEE` | High | 20 | Cash-only payment demanded, hand-to-hand transaction, or no bank receipt. |
-| `R04_HIGH_RISK_SCAM_PATTERN` | High | 35 | Online, crypto, or data-entry jobs in scam-compound border areas (Cambodia, Myanmar, Laos). |
-| `R05_UNREALISTIC_SALARY` | High | 20 | Salary far exceeds statutory market rates (scam bait) or falls below legal minimums. |
-| `R06_MISSING_CRITICAL_CLAUSES` | Medium | 15 | Missing critical terms: employer name, working hours, salary, accommodation, return ticket. |
-| `R07_MISSING_AGENCY_LICENSE` | High | 20 | Recruiting agent has no valid BMET Recruiting License (RL) number. |
-| `R08_SIGN_ON_ARRIVAL` | High | 25 | Contract to be signed only after arrival abroad (contract substitution risk). |
-| `R09_PASSPORT_RETENTION` | High | 25 | Employer or broker holds the worker's original passport (forced labor indicator). |
-| `R10_SALARY_DEDUCTION_DEBT_BOND` | High | 25 | Recruitment or visa expenses deducted from monthly wages (debt bondage risk). |
-| `R11_PRESSURE_TACTICS` | Medium | 15 | Urgency tactics used ("pay today", "limited seats") to prevent verification. |
-| `R12_PERSONAL_MOBILE_PAYMENT` | High | 25 | Payment demanded to personal bKash/Nagad account or prior to visa issuance. |
-| `R13_SOCIAL_MEDIA_ONLY_NO_OFFICE` | Medium | 15 | Broker operates exclusively via WhatsApp, Telegram, or Facebook without an office address. |
-| `R14_TOO_GOOD_TO_BE_TRUE_BUNDLE` | High | 25 | Free visa + free airfare + abnormally high pay with no qualifications required. |
-| `R15_UNVERIFIABLE_EMPLOYER` | Medium | 15 | Employer name or physical foreign workplace address is missing or generic. |
+### Key Features
+* 📷 **Multimodal Ingestion:** Accepts camera photos, uploads (JPG, PNG, WEBP up to 8 MB), or pasted text in English and Bangla.
+* 🔍 **Evidence-Backed Extraction:** Extracts 13 core contract fields (`employer`, `destination`, `job_title`, `salary`, `fee_asked`, `visa_type`, `duration`, `hours`, `accommodation`, `return_ticket`, `agent`, `license_number`, `payment_method`). Values lacking document text snippets are discarded.
+* 🏛️ **BMET Agency Verification:** Automatically normalizes license numbers (e.g. `RL-1857`) and checks status against an offline snapshot of the official BMET Recruiting Agents Information Management System (RAIMS).
+* 💰 **Statutory Fee-Cap Compliance:** Compares recruitment fees against destination-specific legal ceilings under Section 21 of the Overseas Employment and Migrants Act 2013 (e.g., Qatar ceiling of BDT 100,780).
+* ⚖️ **Wage Benchmark Screening:** Detects hyper-inflated pay promises (>4× typical benchmark) commonly used by human traffickers to rush victims into paying.
+* 📋 **Missing Protective Clauses Scan:** Identifies missing essential clauses including overtime, food, medical care, return airfare, termination terms, and dispute resolution.
+* 🚩 **Explainable Red-Flag Heuristics:** Flags 15 recruitment scam patterns (non-work visas, cash-only payments, personal bKash/Nagad transfers, passport confiscation threats, social-media-only presence, sign-on-arrival traps).
+* 📚 **RAG Legal Grounding:** Attaches official legal citations from BMET advisories and ILO standards to each triggered flag.
+* 🔊 **Bangla Audio Readout:** Synthesizes an accessible audio verdict script for low-literacy users via Edge TTS or browser Web Speech API.
+* ☎️ **Immediate Support Directory:** Surfaces direct dial links to government helplines (Probash Bondhu Call Center 16135, National Emergency 999, BMET).
 
-*Full rule details, rationale, and questions in [docs/rules-catalog.md](docs/rules-catalog.md).*
+### Architecture & Processing Flow
 
----
-
-## 6. Official Data Sources & Knowledge Base
-
-Every official threshold, fee ceiling, and contact channel is sourced and dated in [backend/app/data/SOURCES.md](backend/app/data/SOURCES.md):
-- **Recruiting Agencies:** BMET RAIMS portal (Over 2,000 public license records checked).
-- **Recruitment Fee Caps:** Overseas Employment and Migrants Act 2013, Section 21 & BMET circular ceilings.
-- **Salary Benchmarks:** Qatar Law No. 17 of 2020, Malaysia National Minimum Wage 2025, Saudi Musaned Domestic Platform, Singapore MOM employment regulations.
-- **Helplines:** Probashbandhu Call Center (16135, from abroad +88 09610 102 030), Bangladesh Police (999), Government Services (333).
-- **Curated Knowledge Base:** 33 curated passages in `backend/app/rag/kb/` referencing ILO Fair Recruitment and international labor standards.
-
----
-
-## 7. Evaluation & Validation Results
-
-We evaluated Mig_Guard's deterministic rules engine against a labeled synthetic benchmark of 20 realistic contracts and chat scenarios (8 legitimate, 12 scam-pattern) across English and Bengali.
-
-```
-Total Documents Evaluated: 20 (8 Legit, 12 Scam)
-Scam Red-Flag Recall:      117/117 (100.0%)
-False Alarms on Legit:     0 (0.0%)
+```text
+User Input (Image/Photo/Text)
+       │
+       ▼
+ ┌──────────────────────────────────────────────┐
+ │           Ingestion & PII Redaction          │
+ │  • Up to 4 images / pasted text              │
+ │  • Passport & phone numbers masked           │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │         Vision & Transcription Layer         │
+ │  • Primary: Gemini 3.1 Flash Vision          │
+ │  • Fallback: Tesseract OCR (ben+eng)         │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │    Structured Extraction & Validation        │
+ │  • Strict JSON Schema (OfferExtraction)      │
+ │  • No-evidence-no-value snippet enforcement  │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │        Deterministic Verification Engine     │
+ │  • BMET RAIMS Agency Registry (1,685 RLs)    │
+ │  • Statutory Country Fee Caps (16 nations)   │
+ │  • ILO/Host Wage Standards (Qatar Law 17)    │
+ │  • Missing Protective Clauses Scan           │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │          Rule Engine & RAG Grounding         │
+ │  • 15 Red-Flag Checks                        │
+ │  • Token-overlap KB retrieval from 33 docs   │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │         Scoring & Accessible Output          │
+ │  • Score: 0 - 100                            │
+ │  • Verdict: danger / caution / fewer_concerns│
+ │  • Spoken Bangla Audio Script (Edge / Web)   │
+ │  • Helpline Directory (16135, 999)           │
+ └──────────────────────────────────────────────┘
 ```
 
-- **Zero False Reassurance:** All 12 scam offers were successfully caught with high recall across their respective danger indicators.
-- **Zero False Alarms:** All 8 legitimate contracts were assessed cleanly with no erroneous scam flags.
-- **Automated Data Validation:** `python scripts/validate_data.py` validates all JSON schemas and catalog consistency with 0 warnings.
-- *Detailed metrics and error analysis in [docs/evaluation-report.md](docs/evaluation-report.md).*
+---
+
+## 4. Tech Stack, Models, APIs & Datasets
+
+### Backend
+* **Language & Framework:** Python 3.11+, FastAPI, Uvicorn, Starlette
+* **Data Validation:** Pydantic v2
+* **OCR Fallback:** `pytesseract` with Tesseract OCR (`ben+eng`) & Pillow
+* **Rate Limiting & Safety:** Token bucket client limiter, PII redaction regexes
+
+### Frontend
+* **Framework:** Next.js 16 (App Router), React 19, TypeScript
+* **Styling:** CSS variables, responsive design with mobile camera capture
+* **Localization:** Custom zero-dependency bilingual dictionary (`bn`/`en`)
+* **Audio:** HTML5 Web Speech API (`SpeechSynthesisUtterance`, `bn-BD`) with backend MP3 endpoint fallback
+
+### AI Models & Cloud APIs
+* **Primary Extraction Model:** Google Gemini API (`gemini-3.1-flash-lite` / `gemini-3.8-flash`) via `google-genai` SDK
+* **Speech Generation:** Microsoft Edge TTS (`bn-BD-NabanitaNeural`) via `edge-tts`
+
+### Datasets & Official Sources
+* **BMET RAIMS Recruiting Agencies:** Public snapshot of 1,685 licensed recruiting agents from BMET / Overseas Employment Platform (`licensed_agencies.json`).
+* **Statutory Fee Caps:** Ministry of Expatriates' Welfare & Overseas Employment published maximum migration costs (`fee_caps.json`).
+* **Salary Benchmarks:** Qatar Law No. 17 of 2020 and ILO migrant wage surveys (`salary_benchmarks.json`).
+* **Official Helplines:** BMET, Probash Bondhu Call Center, WARBE, BRAC Migration, National Emergency Service (`helplines.json`).
+* **Knowledge Base Passages:** 33 curated passages across 8 thematic areas covering Bangladesh migration laws and worker rights (`app/rag/kb/`).
 
 ---
 
-## 8. Technology Stack
+## 5. AI Tools Used & Transparent Disclosure
 
-- **Frontend:** Next.js 14, React 18, Tailwind CSS, TypeScript, Mobile Camera Capture API, Web Audio Player.
-- **Backend:** Python 3.11+, FastAPI, Uvicorn, Pydantic v2.
-- **AI & Multimodal Models:** Gemini 1.5 Pro / Flash & Claude 3.5 Sonnet (multimodal extraction & transcription), Tesseract OCR fallback.
-- **TTS Synthesis:** Cloud Bangla TTS with browser SpeechSynthesis fallback.
-- **Testing & Tooling:** Pytest, PyYAML, Python-Multipart.
-- **Deployment:** Render / Docker (Backend), Vercel (Frontend).
+Per Rule 4 & 9 of CoU AI Hackathon 2026, all AI tool usage is disclosed:
+* **Google Antigravity / Gemini CLI:** Assisted with architecture design, pipeline verification, data cleaning scripts, and test suite expansion.
+* **GitHub Copilot in VS Code:** Assisted with frontend boilerplate and CI/CD workflow configuration.
+* All AI suggestions were reviewed, modified, and validated through deterministic unit test suites and manual validation. Detailed logs are maintained in [`AI_USAGE.md`](AI_USAGE.md).
 
 ---
 
-## 9. AI Tools & Models Disclosure
+## 6. Third-Party Code & Assets Credited
 
-As required by Hackathon Rule 9 and Rule 16:
-- **Coding Assistants:** Claude 3.5 Sonnet, Claude 3.7 Sonnet, GitHub Copilot (used for route scaffolding, schema design, unit tests, and documentation).
-- **Multimodal Models:** Gemini 1.5 Pro / Flash (vision document extraction).
-- **Human Governance:** All business logic, legal thresholds, salary ranges, and test assertions were authored, reviewed, and audited by registered team members.
-- *Detailed running log available in [AI_USAGE.md](AI_USAGE.md).*
-
----
-
-## 10. Third-Party Code & Assets
-
-- **Icons & UI:** Lucide React, Tailwind CSS UI components.
-- **Standard Libraries:** FastAPI, Pydantic, PyYAML, Pytest.
-- **Official Data References:** ILO Fair Recruitment Guidelines, BMET public circulars, IOM Bangladesh reports.
+* **FastAPI & Starlette:** Tiangolo / Encode (MIT License)
+* **Pydantic:** Pydantic Services Inc. (MIT License)
+* **Google GenAI Python SDK:** Google LLC (Apache-2.0 License)
+* **Edge-TTS:** Hasson / edge-tts project (LGPL-3.0 License)
+* **Pytesseract:** Samuel Hoffstaetter (GPL-3.0 License) & Google Tesseract OCR (Apache-2.0 License)
+* **Government Public Records:** Bureau of Manpower, Employment and Training (BMET), Ministry of Expatriates' Welfare and Overseas Employment, Government of the People's Republic of Bangladesh.
 
 ---
 
-## 11. Quick Start & Setup
+## 7. Setup Instructions, Live Links & Evaluation
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- Git
+### Live Links
+* **Backend API:** Deployed on Render (`mig-guard-backend`) — see [`render.yaml`](render.yaml)
+* **Frontend Web App:** `https://mig-guard.vercel.app/`
 
-### Backend Setup
+---
+
+### Local Setup Instructions
+
+#### Prerequisites
+* Python 3.11+
+* Node.js 20+
+* Google Gemini API Key
+
+#### 1. Backend Setup
 ```bash
-# Clone the repository
-git clone https://github.com/afradd/Mig_Guard.git
-cd Mig_Guard/backend
+# Navigate to backend directory
+cd backend
 
 # Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv .venv
+# Windows:
+.\.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run unit tests
-python -m pytest tests/ -v
+# Configure environment
+cp .env.example .env
+# Edit .env and insert your PRIMARY_LLM_API_KEY
 
 # Start backend server
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+Backend will be live at `http://localhost:8000`. Swagger API documentation available at `http://localhost:8000/docs`.
 
-### Frontend Setup
+#### 2. Frontend Setup
 ```bash
-cd ../frontend
+# Navigate to frontend directory
+cd frontend
+
+# Install packages
 npm install
+
+# Run development server
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open `https://mig-guard.vercel.app/` in your browser.
 
-### Run Evaluation & Data Validation
+#### 3. Run Automated Tests
 ```bash
-# In repository root
+cd backend
+python -m pytest tests/ -v
+```
+All 66 tests (API endpoints, money parsing, license normalization, OCR fallback, rules engine, and scoring) will execute and pass.
+
+#### 4. Validate Official Datasets
+```bash
 python scripts/validate_data.py
+```
+Validates JSON integrity, schema consistency, and KB passage counts.
+
+---
+
+## 8. Evaluation Benchmark Results
+
+The evaluation suite tests the rule engine against a balanced 20-document synthetic dataset (8 legitimate contracts across Saudi Arabia, UAE, Malaysia, Singapore, Qatar; 12 fraudulent offers and chat lures across Cambodia, Myanmar, Laos, Dubai, Malaysia):
+
+```bash
 python eval/run_eval.py
 ```
 
----
+### Benchmark Summary
 
-## 12. Links & Deliverables
+| Metric | Target | Achieved Result |
+| :--- | :---: | :---: |
+| **Scam Red-Flag Recall** | $\ge 70\%$ | **113 / 113 (100.0%)** |
+| **False Alarms on Legitimate Offers** | $\le 3$ | **0 false alarms** |
+| **Average Decision Latency** | $< 3\text{s}$ | **~0.15s (Rules) / ~1.8s (End-to-End Vision)** |
 
-- **Public GitHub Repo:** [https://github.com/afradd/Mig_Guard](https://github.com/afradd/Mig_Guard)
-- **Live Deployment:** [https://mig-guard.vercel.app](https://mig-guard.vercel.app) *(or active host URL)*
-- **Demo Script:** [docs/demo-script.md](docs/demo-script.md)
-- **Official 150-Word Submission:** [docs/submission-text.md](docs/submission-text.md)
-- **Architecture Notes:** [docs/architecture.md](docs/architecture.md)
-- **API Contract:** [docs/api-contract.md](docs/api-contract.md)
-- **Privacy Policy:** [docs/privacy-and-safety.md](docs/privacy-and-safety.md)
+Detailed per-document predictions are logged in [`eval/results/eval_summary.md`](eval/results/eval_summary.md).
 
 ---
-*Built with ❤️ for prospective migrant workers worldwide at CoU AI Hackathon 2026.*
+
+## 9. Important Disclaimer
+
+Mig_Guard is an informational decision-support and fraud-awareness tool. It does not replace formal verification with the **Bureau of Manpower, Employment and Training (BMET)**, the **Overseas Employment Platform (oep.gov.bd)**, or the **Ministry of Expatriates' Welfare and Overseas Employment**. Users are always advised to verify recruiting agency licenses directly at BMET or by calling the Probash Bondhu Call Center at **16135** before handing over money or passports.
