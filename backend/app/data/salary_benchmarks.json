@@ -1,34 +1,4 @@
 {
-  "_note": "Salary benchmark ranges by destination country and job category. Sources and retrieval dates are recorded in SOURCES.md.",
-  "source": "ILO Labour Migration and destination-country labour authorities — https://www.ilo.org/topics-and-sectors/labour-migration",
-  "notes": "Typical monthly base salary ranges in local currency. Values marked OFFICIAL_RANGE are reference ranges derived from official statutory or programme guidance.",
-  "benchmarks": {
-    "saudi_arabia": {
-      "currency": "SAR",
-      "domestic_worker_sar_per_month": { "min": 1500, "max": 3000, "status": "OFFICIAL_RANGE" },
-      "construction_worker_sar_per_month": { "min": 1500, "max": 4000, "status": "OFFICIAL_RANGE" },
-      "general_worker_sar_per_month": { "min": 1500, "max": 4000, "status": "OFFICIAL_RANGE" }
-    },
-    "malaysia": {
-      "currency": "MYR",
-      "manufacturing_worker_myr_per_month": { "min": 1700, "max": 2000, "status": "OFFICIAL_RANGE" },
-      "plantation_worker_myr_per_month": { "min": 1700, "max": 1800, "status": "OFFICIAL_RANGE" },
-      "general_worker_myr_per_month": { "min": 1700, "max": 2500, "status": "OFFICIAL_RANGE" }
-    },
-    "uae": {
-      "currency": "AED",
-      "construction_worker_aed_per_month": { "min": 1500, "max": 3000, "status": "OFFICIAL_RANGE" },
-      "domestic_worker_aed_per_month": { "min": 1500, "max": 2500, "status": "OFFICIAL_RANGE" },
-      "general_worker_aed_per_month": { "min": 1500, "max": 3000, "status": "OFFICIAL_RANGE" }
-    },
-    "singapore": {
-      "currency": "SGD",
-      "domestic_worker_sgd_per_month": { "min": 600, "max": 800, "status": "OFFICIAL_RANGE" },
-      "general_worker_sgd_per_month": { "min": 600, "max": 3000, "status": "OFFICIAL_RANGE" }
-    },
-    "cambodia": {
-      "currency": "USD",
-      "general_worker_usd_per_month": { "min": 200, "max": 500, "status": "OFFICIAL_RANGE" }
   "retrieved": "2026-11-24",
   "caveat": "Indicative public ranges for screening unusually high advertised pay. Not official wage awards for every job. If destination or role cannot be matched, the salary check is unverifiable.",
   "fx_to_bdt_approx": {
@@ -114,5 +84,4 @@
     }
   ]
 }
-
 
