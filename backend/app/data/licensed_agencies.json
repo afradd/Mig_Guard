@@ -1,13 +1,4 @@
 {
-  "_note": "This file will hold licensed recruiting agency data from BMET. Official list must be fetched from https://bmet.gov.bd/ and verified before use. Placeholder entries only.",
-  "source": "BMET Official Licensed Recruiting Agencies List (log exact URL and date in SOURCES.md)",
-  "retrieved": "VERIFY_DATE",
-  "agencies": {
-    "RL-0000": {
-      "name": "SAMPLE_REPLACE_WITH_REAL_BMET_AGENCY",
-      "status": "VERIFY_OFFICIAL_SOURCE"
-    }
-  },
   "source_url": "https://www.oep.gov.bd/agencies",
   "alt_source_url": "https://raims.oep.gov.bd/agencies",
   "source_name": "BMET Recruiting Agents Information System (RAIMS) via Overseas Employment Platform",

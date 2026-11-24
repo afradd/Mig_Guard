@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 validate_data.py
 Checks that all official data files, rules catalog, and knowledge base files
@@ -59,11 +59,17 @@ def validate():
         try:
             with open(catalog_path, "r", encoding="utf-8") as f:
                 catalog = yaml.safe_load(f)
-            rule_count = len(catalog)
+            rules_to_check = {}
+            if "rules" in catalog and isinstance(catalog["rules"], dict):
+                rules_to_check.update(catalog["rules"])
+            for rid, meta in catalog.items():
+                if rid not in {"verdicts", "rules"} and isinstance(meta, dict):
+                    rules_to_check[rid] = meta
+            rule_count = len(rules_to_check)
             print(f"  [OK] catalog.yaml valid YAML with {rule_count} rules")
             if rule_count < 15:
                 warnings.append(f"Catalog has only {rule_count}/15 expected rules")
-            for rid, meta in catalog.items():
+            for rid, meta in rules_to_check.items():
                 for field in ["severity", "weight", "title_en", "title_bn", "explanation_en", "explanation_bn", "question_en", "question_bn"]:
                     if field not in meta:
                         errors.append(f"Rule {rid} missing required field '{field}'")

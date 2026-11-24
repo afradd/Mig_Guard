@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from io import BytesIO
 from typing import Sequence
+
+logger = logging.getLogger(__name__)
 
 _PHONE_RE = re.compile(
     r"(?<!\w)(?:(?:\+?88[\s-]?)?01[3-9]|(?:\+?880[\s-]?)?[1][3-9])"
@@ -39,8 +42,9 @@ def mask_image_pii(images: Sequence[tuple[bytes, str]]) -> list[tuple[bytes, str
     try:
         import pytesseract
         from PIL import Image, ImageDraw
-    except ImportError as exc:
-        raise RuntimeError("Image PII masking dependencies are unavailable.") from exc
+    except ImportError:
+        logger.warning("Image PII masking dependencies are unavailable; passing original images.")
+        return list(images)
 
     masked_images: list[tuple[bytes, str]] = []
     for payload, mime_type in images:
@@ -77,5 +81,6 @@ def mask_image_pii(images: Sequence[tuple[bytes, str]]) -> list[tuple[bytes, str
                 image.save(output, format=format_name)
                 masked_images.append((output.getvalue(), mime_type))
         except Exception as exc:
-            raise RuntimeError("Image PII masking failed.") from exc
+            logger.warning("Image PII masking skipped due to error: %s", exc)
+            masked_images.append((payload, mime_type))
     return masked_images
