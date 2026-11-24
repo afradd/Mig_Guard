@@ -80,51 +80,42 @@ def check_r05_unrealistic_salary(
     benchmarks = benchmarks_data.get("benchmarks", {})
     if isinstance(benchmarks, list):
         for row in benchmarks:
-            destination_aliases = row.get("destination_aliases", [])
-            role_aliases = row.get("role_aliases", [])
-            if not any(alias.lower() in dest for alias in destination_aliases):
+            destination_aliases = [str(alias).lower() for alias in row.get("destination_aliases", [])]
+            if not any(alias in dest for alias in destination_aliases):
                 continue
-            if job_title and role_aliases and not any(
-                alias.lower() in job_title for alias in role_aliases
-            ):
+            role_aliases = [str(alias).lower() for alias in row.get("role_aliases", [])]
+            if job_title and role_aliases and not any(alias in job_title for alias in role_aliases):
                 continue
-
             high = row.get("typical_high")
             low = row.get("typical_low")
             multiplier = row.get("unrealistic_multiplier", 2.5)
             if high is not None and salary > float(high) * float(multiplier):
-                return _get_snippet(extracted, "salary_amount") or (
-                    f"{salary} (unusually high for {dest})"
-                )
+                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually high for {dest})"
             if low is not None and salary < float(low) * 0.6:
-                return _get_snippet(extracted, "salary_amount") or (
-                    f"{salary} (unusually low for {dest})"
-                )
+                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually low for {dest})"
         return None
 
     for country_key, info in benchmarks.items():
         normalized_country = country_key.replace("_", " ").lower()
-        if normalized_country in dest:
-            # Find matching role dict (e.g. general_worker_sar_per_month)
-            role_range = None
-            for k, v in info.items():
-                if isinstance(v, dict) and ("min" in v or "max" in v):
-                    role_prefix = k.split("_")[0]
-                    if role_prefix and role_prefix in job_title:
-                        role_range = v
-                        break
-                    if "general_worker" in k or role_range is None:
-                        role_range = v
-
-            if not role_range:
-                continue
-
-            min_sal = role_range.get("min")
-            max_sal = role_range.get("max")
-            if max_sal is not None and salary > max_sal * 2.5:
-                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually high for {normalized_country})"
-            if min_sal is not None and salary < min_sal * 0.6:
-                return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually low for {normalized_country})"
+        if normalized_country not in dest:
+            continue
+        role_range = None
+        for k, v in info.items():
+            if isinstance(v, dict) and ("min" in v or "max" in v):
+                role_prefix = k.split("_")[0]
+                if role_prefix and role_prefix in job_title:
+                    role_range = v
+                    break
+                if "general_worker" in k or role_range is None:
+                    role_range = v
+        if not role_range:
+            continue
+        min_sal = role_range.get("min")
+        max_sal = role_range.get("max")
+        if max_sal is not None and salary > max_sal * 2.5:
+            return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually high for {normalized_country})"
+        if min_sal is not None and salary < min_sal * 0.6:
+            return _get_snippet(extracted, "salary_amount") or f"{salary} (unusually low for {normalized_country})"
     return None
 
 def check_r06_missing_critical_clauses(extracted: Dict[str, Any]) -> Optional[str]:

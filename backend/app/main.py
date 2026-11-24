@@ -15,11 +15,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.api.routes_health import router as health_router
 from app.api.routes_analyze import router as analyze_router
+from app.api.routes_tts import router as tts_router
 
 app = FastAPI(
     title="Job Offer Checker API",
     version="0.1.0",
 )
+
+
+@app.get("/")
+@app.head("/")
+def service_root():
+    return {"status": "ok", "service": "Mig_Guard"}
 
 is_wildcard = "*" in settings.allowed_origins
 
@@ -33,3 +40,4 @@ app.add_middleware(
 
 app.include_router(health_router, prefix="/api")
 app.include_router(analyze_router, prefix="/api")
+app.include_router(tts_router, prefix="/api")

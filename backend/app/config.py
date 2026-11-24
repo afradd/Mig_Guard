@@ -31,6 +31,17 @@ class Settings:
     llm_timeout_seconds: int = int(os.getenv("LLM_TIMEOUT_SECONDS", "45"))
     llm_max_attempts: int = int(os.getenv("LLM_MAX_ATTEMPTS", "3"))
     ocr_timeout_seconds: int = int(os.getenv("OCR_TIMEOUT_SECONDS", "20"))
+    rate_limit_per_minute: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "30"))
+    llm_daily_call_limit: int = int(os.getenv("LLM_DAILY_CALL_LIMIT", "100"))
+    llm_daily_cost_limit_usd: float = float(
+        os.getenv("LLM_DAILY_COST_LIMIT_USD", "5")
+    )
+    llm_estimated_cost_usd: float = float(
+        os.getenv("LLM_ESTIMATED_COST_USD", "0.01")
+    )
+    tts_api_key: str = os.getenv("TTS_API_KEY", "")
+    tts_provider: str = (os.getenv("TTS_PROVIDER") or "edge").lower()
+    tts_voice: str = os.getenv("TTS_VOICE", "bn-BD-NabanitaNeural")
     explain_with_llm: bool = os.getenv("EXPLAIN_WITH_LLM", "false").lower() in {
         "1",
         "true",

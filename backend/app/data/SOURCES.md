@@ -32,7 +32,6 @@ Every figure used by verification checks is listed here. Re-check live official 
 - Ministry of Expatriates' Welfare and Overseas Employment: +880-2-41030444 (https://probashi.gov.bd).
 
 ## Knowledge Base & International Standards
-
 ## Fees and Recruiting Agencies
 
 The Bangladesh fee-and-agency guidance was checked on 2026-11-24.
@@ -82,6 +81,9 @@ The links below provide destination-country employment and wage-policy context. 
   - Official labour-authority context; confirm current occupation-specific rules directly.
 - [ILO Labour Migration](https://www.ilo.org/topics-and-sectors/labour-migration)
   - Cross-reference for labour-migration salary context.
+
+## International Labour Standards
+
 
 - ILO Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration
 - ILO International Labour Standards and Labour Migration: https://www.ilo.org/topics-and-sectors/labour-migration/international-labour-standards-and-labour-migration

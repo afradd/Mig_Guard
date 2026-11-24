@@ -45,6 +45,17 @@ def test_health_returns_ok():
     assert "env" in body
 
 
+def test_service_root_returns_ok():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json()["service"] == "Mig_Guard"
+
+
+def test_service_root_head_returns_ok():
+    response = client.head("/")
+    assert response.status_code == 200
+
+
 def test_analyze_no_input_returns_400():
     response = client.post("/api/analyze")
     assert response.status_code == 400

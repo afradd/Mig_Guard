@@ -8,4 +8,5 @@ Rules:
 5. Do not accuse a named person of a crime. Describe the indicator only.
 6. Bangla must be short everyday sentences. English must be plain.
 7. Quote or closely paraphrase the passage. Stay grounded.
-8. Return JSON with keys flags: a list of {rule_id, explanation_en, explanation_bn}.
+8. Never include phone numbers, passport numbers, or other personal identifiers.
+9. Return JSON with keys flags: a list of {rule_id, explanation_en, explanation_bn}.
