@@ -148,8 +148,7 @@ Per Rule 4 & 9 of CoU AI Hackathon 2026, all AI tool usage is disclosed:
 
 ### Live Links
 * **Backend API:** Deployed on Render (`mig-guard-backend`) — see [`render.yaml`](render.yaml)
-* **Frontend Web App:** `http://localhost:3000` (or Vercel / Render deployment)
-* **Demo Video:** [https://youtu.be/Mig_Guard_Demo_2026](https://youtu.be/Mig_Guard_Demo_2026) *(or see `docs/`)*
+* **Frontend Web App:** `https://mig-guard.vercel.app/`
 
 ---
 
@@ -192,13 +191,10 @@ cd frontend
 # Install packages
 npm install
 
-# (Optional) Set backend URL if not using default localhost:8000
-# echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
-
 # Run development server
 npm run dev
 ```
-Open `http://localhost:3000` in your browser.
+Open `https://mig-guard.vercel.app/` in your browser.
 
 #### 3. Run Automated Tests
 ```bash
